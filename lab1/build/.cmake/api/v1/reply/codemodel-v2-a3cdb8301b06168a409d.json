@@ -1,0 +1,78 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.22.0"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "CHILD2",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "CHILD1::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CHILD1-Debug-6a276893f508ed905e62.json",
+					"name" : "CHILD1",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "CHILD2::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-CHILD2-Debug-1e1c9243906b49b78bfa.json",
+					"name" : "CHILD2",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "OS_LAB::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-OS_LAB-Debug-26ea887e69a0b43e63fa.json",
+					"name" : "OS_LAB",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/Ivanh/Documents/OS_LAB/lab1/build",
+		"source" : "C:/Users/Ivanh/Documents/OS_LAB/lab1"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

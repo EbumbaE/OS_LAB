@@ -1,0 +1,5 @@
+C:/Users/Ivanh/Documents/OS_LAB/lab1/build/CMakeFiles/OS_LAB.dir
+C:/Users/Ivanh/Documents/OS_LAB/lab1/build/CMakeFiles/CHILD1.dir
+C:/Users/Ivanh/Documents/OS_LAB/lab1/build/CMakeFiles/CHILD2.dir
+C:/Users/Ivanh/Documents/OS_LAB/lab1/build/CMakeFiles/edit_cache.dir
+C:/Users/Ivanh/Documents/OS_LAB/lab1/build/CMakeFiles/rebuild_cache.dir

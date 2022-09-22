@@ -1,0 +1,72 @@
+{
+	"kind" : "toolchains",
+	"toolchains" : 
+	[
+		{
+			"compiler" : 
+			{
+				"id" : "GNU",
+				"implicit" : 
+				{
+					"includeDirectories" : 
+					[
+						"C:/Users/Ivanh/gcc/lib/gcc/x86_64-w64-mingw32/11.1.0/include",
+						"C:/Users/Ivanh/gcc/lib/gcc/x86_64-w64-mingw32/11.1.0/include-fixed",
+						"C:/Users/Ivanh/gcc/x86_64-w64-mingw32/include"
+					],
+					"linkDirectories" : 
+					[
+						"C:/Users/Ivanh/gcc/lib/gcc/x86_64-w64-mingw32/11.1.0",
+						"C:/Users/Ivanh/gcc/lib/gcc",
+						"C:/Users/Ivanh/gcc/x86_64-w64-mingw32/lib",
+						"C:/Users/Ivanh/gcc/lib"
+					],
+					"linkFrameworkDirectories" : [],
+					"linkLibraries" : 
+					[
+						"mingw32",
+						"gcc",
+						"moldname",
+						"mingwex",
+						"kernel32",
+						"advapi32",
+						"shell32",
+						"user32",
+						"kernel32",
+						"mingw32",
+						"gcc",
+						"moldname",
+						"mingwex",
+						"kernel32"
+					]
+				},
+				"path" : "C:/Users/Ivanh/gcc/bin/gcc.exe",
+				"version" : "11.1.0"
+			},
+			"language" : "C",
+			"sourceFileExtensions" : 
+			[
+				"c",
+				"m"
+			]
+		},
+		{
+			"compiler" : 
+			{
+				"implicit" : {},
+				"path" : "C:/Users/Ivanh/gcc/bin/windres.exe"
+			},
+			"language" : "RC",
+			"sourceFileExtensions" : 
+			[
+				"rc",
+				"RC"
+			]
+		}
+	],
+	"version" : 
+	{
+		"major" : 1,
+		"minor" : 0
+	}
+}

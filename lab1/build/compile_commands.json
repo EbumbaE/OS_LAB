@@ -1,0 +1,27 @@
+[
+{
+  "directory": "C:/Users/Ivanh/Documents/OS_LAB/lab1/build",
+  "command": "C:/Users/Ivanh/gcc/bin/gcc.exe   -g -o CMakeFiles/OS_LAB.dir/src/main.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab1/src/main.c",
+  "file": "C:/Users/Ivanh/Documents/OS_LAB/lab1/src/main.c"
+},
+{
+  "directory": "C:/Users/Ivanh/Documents/OS_LAB/lab1/build",
+  "command": "C:/Users/Ivanh/gcc/bin/gcc.exe   -g -o CMakeFiles/CHILD1.dir/src/workWithFile.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab1/src/workWithFile.c",
+  "file": "C:/Users/Ivanh/Documents/OS_LAB/lab1/src/workWithFile.c"
+},
+{
+  "directory": "C:/Users/Ivanh/Documents/OS_LAB/lab1/build",
+  "command": "C:/Users/Ivanh/gcc/bin/gcc.exe   -g -o CMakeFiles/CHILD1.dir/src/child1.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab1/src/child1.c",
+  "file": "C:/Users/Ivanh/Documents/OS_LAB/lab1/src/child1.c"
+},
+{
+  "directory": "C:/Users/Ivanh/Documents/OS_LAB/lab1/build",
+  "command": "C:/Users/Ivanh/gcc/bin/gcc.exe   -g -o CMakeFiles/CHILD2.dir/src/workWithFile.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab1/src/workWithFile.c",
+  "file": "C:/Users/Ivanh/Documents/OS_LAB/lab1/src/workWithFile.c"
+},
+{
+  "directory": "C:/Users/Ivanh/Documents/OS_LAB/lab1/build",
+  "command": "C:/Users/Ivanh/gcc/bin/gcc.exe   -g -o CMakeFiles/CHILD2.dir/src/child2.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab1/src/child2.c",
+  "file": "C:/Users/Ivanh/Documents/OS_LAB/lab1/src/child2.c"
+}
+]
