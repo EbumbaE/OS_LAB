@@ -1,6 +1,6 @@
 CMakeFiles/CHILD2.dir/src/workWithFile.c.obj: \
- C:/Users/Ivanh/Documents/OS_LAB/lab1/src/workWithFile.c \
- c:\users\ivanh\documents\os_lab\lab1\include\workwithfile.h \
+ C:/Users/Ivanh/Documents/OS_LAB/lab2/src/workWithFile.c \
+ c:\users\ivanh\documents\os_lab\lab2\include\workwithfile.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\stdlib.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\corecrt.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\_mingw.h \

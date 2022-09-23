@@ -1,6 +1,6 @@
 CMakeFiles/CHILD1.dir/src/child1.c.obj: \
- C:/Users/Ivanh/Documents/OS_LAB/lab1/src/child1.c \
- c:\users\ivanh\documents\os_lab\lab1\include\workwithfile.h \
+ C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child1.c \
+ c:\users\ivanh\documents\os_lab\lab2\include\workwithfile.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\stdlib.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\corecrt.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\_mingw.h \
@@ -20,7 +20,7 @@ CMakeFiles/CHILD1.dir/src/child1.c.obj: \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\_mingw_off_t.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\swprintf.inl \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\sec_api\stdio_s.h \
- c:\users\ivanh\documents\os_lab\lab1\include\include.h \
+ c:\users\ivanh\documents\os_lab\lab2\include\include.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\io.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\string.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\sec_api\string_s.h \

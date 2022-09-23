@@ -53,10 +53,10 @@ RM = "C:/Program Files/CMake/bin/cmake.exe" -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:/Users/Ivanh/Documents/OS_LAB/lab1
+CMAKE_SOURCE_DIR = C:/Users/Ivanh/Documents/OS_LAB/lab2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:/Users/Ivanh/Documents/OS_LAB/lab1/build
+CMAKE_BINARY_DIR = C:/Users/Ivanh/Documents/OS_LAB/lab2/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/OS_LAB.dir/depend.make
@@ -72,16 +72,16 @@ include CMakeFiles/OS_LAB.dir/flags.make
 CMakeFiles/OS_LAB.dir/src/main.c.obj: CMakeFiles/OS_LAB.dir/flags.make
 CMakeFiles/OS_LAB.dir/src/main.c.obj: ../src/main.c
 CMakeFiles/OS_LAB.dir/src/main.c.obj: CMakeFiles/OS_LAB.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:/Users/Ivanh/Documents/OS_LAB/lab1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/OS_LAB.dir/src/main.c.obj"
-	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/OS_LAB.dir/src/main.c.obj -MF CMakeFiles/OS_LAB.dir/src/main.c.obj.d -o CMakeFiles/OS_LAB.dir/src/main.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab1/src/main.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:/Users/Ivanh/Documents/OS_LAB/lab2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/OS_LAB.dir/src/main.c.obj"
+	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/OS_LAB.dir/src/main.c.obj -MF CMakeFiles/OS_LAB.dir/src/main.c.obj.d -o CMakeFiles/OS_LAB.dir/src/main.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab2/src/main.c
 
 CMakeFiles/OS_LAB.dir/src/main.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/OS_LAB.dir/src/main.c.i"
-	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:/Users/Ivanh/Documents/OS_LAB/lab1/src/main.c > CMakeFiles/OS_LAB.dir/src/main.c.i
+	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:/Users/Ivanh/Documents/OS_LAB/lab2/src/main.c > CMakeFiles/OS_LAB.dir/src/main.c.i
 
 CMakeFiles/OS_LAB.dir/src/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/OS_LAB.dir/src/main.c.s"
-	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:/Users/Ivanh/Documents/OS_LAB/lab1/src/main.c -o CMakeFiles/OS_LAB.dir/src/main.c.s
+	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:/Users/Ivanh/Documents/OS_LAB/lab2/src/main.c -o CMakeFiles/OS_LAB.dir/src/main.c.s
 
 # Object files for target OS_LAB
 OS_LAB_OBJECTS = \
@@ -94,7 +94,7 @@ OS_LAB.exe: CMakeFiles/OS_LAB.dir/src/main.c.obj
 OS_LAB.exe: CMakeFiles/OS_LAB.dir/build.make
 OS_LAB.exe: CMakeFiles/OS_LAB.dir/linklibs.rsp
 OS_LAB.exe: CMakeFiles/OS_LAB.dir/objects1.rsp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:/Users/Ivanh/Documents/OS_LAB/lab1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable OS_LAB.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:/Users/Ivanh/Documents/OS_LAB/lab2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable OS_LAB.exe"
 	"C:/Program Files/CMake/bin/cmake.exe" -E rm -f CMakeFiles/OS_LAB.dir/objects.a
 	C:/Users/Ivanh/gcc/bin/ar.exe qc CMakeFiles/OS_LAB.dir/objects.a @CMakeFiles/OS_LAB.dir/objects1.rsp
 	C:/Users/Ivanh/gcc/bin/gcc.exe -g -Wl,--whole-archive CMakeFiles/OS_LAB.dir/objects.a -Wl,--no-whole-archive -o OS_LAB.exe -Wl,--out-implib,libOS_LAB.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles/OS_LAB.dir/linklibs.rsp
@@ -108,6 +108,6 @@ CMakeFiles/OS_LAB.dir/clean:
 .PHONY : CMakeFiles/OS_LAB.dir/clean
 
 CMakeFiles/OS_LAB.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" C:/Users/Ivanh/Documents/OS_LAB/lab1 C:/Users/Ivanh/Documents/OS_LAB/lab1 C:/Users/Ivanh/Documents/OS_LAB/lab1/build C:/Users/Ivanh/Documents/OS_LAB/lab1/build C:/Users/Ivanh/Documents/OS_LAB/lab1/build/CMakeFiles/OS_LAB.dir/DependInfo.cmake --color=$(COLOR)
+	$(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" C:/Users/Ivanh/Documents/OS_LAB/lab2 C:/Users/Ivanh/Documents/OS_LAB/lab2 C:/Users/Ivanh/Documents/OS_LAB/lab2/build C:/Users/Ivanh/Documents/OS_LAB/lab2/build C:/Users/Ivanh/Documents/OS_LAB/lab2/build/CMakeFiles/OS_LAB.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/OS_LAB.dir/depend
 

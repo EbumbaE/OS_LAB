@@ -34,19 +34,11 @@ int main() {
 
     if (!CreatePipe(&pipe1[INPUT_READ], &pipe1[INPUT_WRITE], &saAttr, 0)){
         printf("Error in create stdin pipe1");
-        return 0;
-    }
-    if (!SetHandleInformation(pipe1[INPUT_WRITE], HANDLE_FLAG_INHERIT, 0)){
-        printf("Error in check stdin pipe1");
-        return 0;
+        return 1;
     }
     if (!CreatePipe(&pipe2[INPUT_READ], &pipe2[INPUT_WRITE], &saAttr, 0)){
         printf("Error in create stdin pipe2");
-        return 0;
-    }
-    if (!SetHandleInformation(pipe2[INPUT_WRITE], HANDLE_FLAG_INHERIT, 0)){
-        printf("Error in check stdin pipe2");
-        return 0;
+        return 1;
     }
 
     int err;
@@ -62,6 +54,7 @@ int main() {
     }
 
     DWORD dwWritten;
+    srand(rand());
     int r = rand() % 100 + 1;
     if (r <= 80) {
         WriteFile(pipe1[INPUT_WRITE], &file1, sizeof(file1), &dwWritten, NULL);

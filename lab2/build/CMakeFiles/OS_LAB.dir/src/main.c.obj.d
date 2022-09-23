@@ -1,7 +1,7 @@
 CMakeFiles/OS_LAB.dir/src/main.c.obj: \
- C:/Users/Ivanh/Documents/OS_LAB/lab1/src/main.c \
- c:\users\ivanh\documents\os_lab\lab1\include\main.h \
- c:\users\ivanh\documents\os_lab\lab1\include\include.h \
+ C:/Users/Ivanh/Documents/OS_LAB/lab2/src/main.c \
+ c:\users\ivanh\documents\os_lab\lab2\include\main.h \
+ c:\users\ivanh\documents\os_lab\lab2\include\include.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\io.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\crtdefs.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\corecrt.h \

@@ -53,10 +53,10 @@ RM = "C:/Program Files/CMake/bin/cmake.exe" -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:/Users/Ivanh/Documents/OS_LAB/lab1
+CMAKE_SOURCE_DIR = C:/Users/Ivanh/Documents/OS_LAB/lab2
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:/Users/Ivanh/Documents/OS_LAB/lab1/build
+CMAKE_BINARY_DIR = C:/Users/Ivanh/Documents/OS_LAB/lab2/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/CHILD2.dir/depend.make
@@ -72,30 +72,30 @@ include CMakeFiles/CHILD2.dir/flags.make
 CMakeFiles/CHILD2.dir/src/workWithFile.c.obj: CMakeFiles/CHILD2.dir/flags.make
 CMakeFiles/CHILD2.dir/src/workWithFile.c.obj: ../src/workWithFile.c
 CMakeFiles/CHILD2.dir/src/workWithFile.c.obj: CMakeFiles/CHILD2.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:/Users/Ivanh/Documents/OS_LAB/lab1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/CHILD2.dir/src/workWithFile.c.obj"
-	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/CHILD2.dir/src/workWithFile.c.obj -MF CMakeFiles/CHILD2.dir/src/workWithFile.c.obj.d -o CMakeFiles/CHILD2.dir/src/workWithFile.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab1/src/workWithFile.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:/Users/Ivanh/Documents/OS_LAB/lab2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/CHILD2.dir/src/workWithFile.c.obj"
+	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/CHILD2.dir/src/workWithFile.c.obj -MF CMakeFiles/CHILD2.dir/src/workWithFile.c.obj.d -o CMakeFiles/CHILD2.dir/src/workWithFile.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab2/src/workWithFile.c
 
 CMakeFiles/CHILD2.dir/src/workWithFile.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/CHILD2.dir/src/workWithFile.c.i"
-	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:/Users/Ivanh/Documents/OS_LAB/lab1/src/workWithFile.c > CMakeFiles/CHILD2.dir/src/workWithFile.c.i
+	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:/Users/Ivanh/Documents/OS_LAB/lab2/src/workWithFile.c > CMakeFiles/CHILD2.dir/src/workWithFile.c.i
 
 CMakeFiles/CHILD2.dir/src/workWithFile.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/CHILD2.dir/src/workWithFile.c.s"
-	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:/Users/Ivanh/Documents/OS_LAB/lab1/src/workWithFile.c -o CMakeFiles/CHILD2.dir/src/workWithFile.c.s
+	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:/Users/Ivanh/Documents/OS_LAB/lab2/src/workWithFile.c -o CMakeFiles/CHILD2.dir/src/workWithFile.c.s
 
 CMakeFiles/CHILD2.dir/src/child2.c.obj: CMakeFiles/CHILD2.dir/flags.make
 CMakeFiles/CHILD2.dir/src/child2.c.obj: ../src/child2.c
 CMakeFiles/CHILD2.dir/src/child2.c.obj: CMakeFiles/CHILD2.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:/Users/Ivanh/Documents/OS_LAB/lab1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/CHILD2.dir/src/child2.c.obj"
-	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/CHILD2.dir/src/child2.c.obj -MF CMakeFiles/CHILD2.dir/src/child2.c.obj.d -o CMakeFiles/CHILD2.dir/src/child2.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab1/src/child2.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:/Users/Ivanh/Documents/OS_LAB/lab2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/CHILD2.dir/src/child2.c.obj"
+	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/CHILD2.dir/src/child2.c.obj -MF CMakeFiles/CHILD2.dir/src/child2.c.obj.d -o CMakeFiles/CHILD2.dir/src/child2.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child2.c
 
 CMakeFiles/CHILD2.dir/src/child2.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/CHILD2.dir/src/child2.c.i"
-	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:/Users/Ivanh/Documents/OS_LAB/lab1/src/child2.c > CMakeFiles/CHILD2.dir/src/child2.c.i
+	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child2.c > CMakeFiles/CHILD2.dir/src/child2.c.i
 
 CMakeFiles/CHILD2.dir/src/child2.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/CHILD2.dir/src/child2.c.s"
-	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:/Users/Ivanh/Documents/OS_LAB/lab1/src/child2.c -o CMakeFiles/CHILD2.dir/src/child2.c.s
+	C:/Users/Ivanh/gcc/bin/gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child2.c -o CMakeFiles/CHILD2.dir/src/child2.c.s
 
 # Object files for target CHILD2
 CHILD2_OBJECTS = \
@@ -110,7 +110,7 @@ CHILD2.exe: CMakeFiles/CHILD2.dir/src/child2.c.obj
 CHILD2.exe: CMakeFiles/CHILD2.dir/build.make
 CHILD2.exe: CMakeFiles/CHILD2.dir/linklibs.rsp
 CHILD2.exe: CMakeFiles/CHILD2.dir/objects1.rsp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:/Users/Ivanh/Documents/OS_LAB/lab1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable CHILD2.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:/Users/Ivanh/Documents/OS_LAB/lab2/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable CHILD2.exe"
 	"C:/Program Files/CMake/bin/cmake.exe" -E rm -f CMakeFiles/CHILD2.dir/objects.a
 	C:/Users/Ivanh/gcc/bin/ar.exe qc CMakeFiles/CHILD2.dir/objects.a @CMakeFiles/CHILD2.dir/objects1.rsp
 	C:/Users/Ivanh/gcc/bin/gcc.exe -g -Wl,--whole-archive CMakeFiles/CHILD2.dir/objects.a -Wl,--no-whole-archive -o CHILD2.exe -Wl,--out-implib,libCHILD2.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles/CHILD2.dir/linklibs.rsp
@@ -124,6 +124,6 @@ CMakeFiles/CHILD2.dir/clean:
 .PHONY : CMakeFiles/CHILD2.dir/clean
 
 CMakeFiles/CHILD2.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" C:/Users/Ivanh/Documents/OS_LAB/lab1 C:/Users/Ivanh/Documents/OS_LAB/lab1 C:/Users/Ivanh/Documents/OS_LAB/lab1/build C:/Users/Ivanh/Documents/OS_LAB/lab1/build C:/Users/Ivanh/Documents/OS_LAB/lab1/build/CMakeFiles/CHILD2.dir/DependInfo.cmake --color=$(COLOR)
+	$(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" C:/Users/Ivanh/Documents/OS_LAB/lab2 C:/Users/Ivanh/Documents/OS_LAB/lab2 C:/Users/Ivanh/Documents/OS_LAB/lab2/build C:/Users/Ivanh/Documents/OS_LAB/lab2/build C:/Users/Ivanh/Documents/OS_LAB/lab2/build/CMakeFiles/CHILD2.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/CHILD2.dir/depend
 
