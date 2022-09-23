@@ -14,6 +14,9 @@ int CreateChildProcess(TCHAR *childName, HANDLE pipe[4]){
 
     bSuccess = CreateProcess(NULL, szCmdline, NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo); 
 
+    CloseHandle(piProcInfo.hProcess);
+    CloseHandle(piProcInfo.hThread);
+
     return bSuccess;
 }
 
@@ -58,10 +61,17 @@ int main() {
     int r = rand() % 100 + 1;
     if (r <= 80) {
         WriteFile(pipe1[INPUT_WRITE], &file1, sizeof(file1), &dwWritten, NULL);
+        WriteFile(pipe2[INPUT_WRITE], "&", sizeof("&"), &dwWritten, NULL);
     }
     else{
         WriteFile(pipe2[INPUT_WRITE], &file2, sizeof(file2), &dwWritten, NULL);
+        WriteFile(pipe1[INPUT_WRITE], "&", sizeof("&"), &dwWritten, NULL);
     }
+
+    CloseHandle(pipe1[INPUT_WRITE]);
+    CloseHandle(pipe1[INPUT_READ]);
+    CloseHandle(pipe2[INPUT_WRITE]);
+    CloseHandle(pipe2[INPUT_READ]);
 
     return 0;
 }

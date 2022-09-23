@@ -10,7 +10,7 @@ add_executable(OS_LAB ${MAIN_SOURCE} ${MAIN_HEADERS})
 project(CHILD1 LANGUAGES C)
 project(CHILD2 LANGUAGES C)
 
-set(CHILD_HEADERS include/workWithFile.h)
+set(CHILD_HEADERS include/workWithFile.h include/include.h)
 set(CHILD_SOURCE src/workWithFile.c)
 
 add_executable(CHILD1 ${CHILD_HEADERS} ${CHILD_SOURCE} src/child1.c)

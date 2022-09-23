@@ -16,6 +16,9 @@ int main(){
     
     ReadFile(hStdin, file, sizeof(file), &dwRead, NULL);
     if (dwRead != 0){
+        if (file[0] == '&'){
+            return 0;
+        }
         DellVowel(file, "../out.txt");
     }
     

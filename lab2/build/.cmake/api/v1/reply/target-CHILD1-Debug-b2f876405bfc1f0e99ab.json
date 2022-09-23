@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "CHILD2.exe"
+			"path" : "CHILD1.exe"
 		},
 		{
-			"path" : "CHILD2.pdb"
+			"path" : "CHILD1.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -27,7 +27,7 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 17,
+				"line" : 16,
 				"parent" : 0
 			}
 		]
@@ -44,12 +44,12 @@
 			"language" : "C",
 			"sourceIndexes" : 
 			[
-				1,
-				2
+				2,
+				3
 			]
 		}
 	],
-	"id" : "CHILD2::@6890427a1f51a3e7e1df",
+	"id" : "CHILD1::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -69,8 +69,8 @@
 		],
 		"language" : "C"
 	},
-	"name" : "CHILD2",
-	"nameOnDisk" : "CHILD2.exe",
+	"name" : "CHILD1",
+	"nameOnDisk" : "CHILD1.exe",
 	"paths" : 
 	{
 		"build" : ".",
@@ -82,15 +82,16 @@
 			"name" : "Header Files",
 			"sourceIndexes" : 
 			[
-				0
+				0,
+				1
 			]
 		},
 		{
 			"name" : "Source Files",
 			"sourceIndexes" : 
 			[
-				1,
-				2
+				2,
+				3
 			]
 		}
 	],
@@ -103,6 +104,11 @@
 		},
 		{
 			"backtrace" : 1,
+			"path" : "include/include.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/workWithFile.c",
 			"sourceGroupIndex" : 1
@@ -110,7 +116,7 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "src/child2.c",
+			"path" : "src/child1.c",
 			"sourceGroupIndex" : 1
 		}
 	],
