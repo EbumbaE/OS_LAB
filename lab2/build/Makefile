@@ -155,53 +155,32 @@ CHILD2/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CHILD2.dir/build.make CMakeFiles/CHILD2.dir/build
 .PHONY : CHILD2/fast
 
-src/child1.obj: src/child1.c.obj
-.PHONY : src/child1.obj
+src/child.obj: src/child.c.obj
+.PHONY : src/child.obj
 
 # target to build an object file
-src/child1.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CHILD1.dir/build.make CMakeFiles/CHILD1.dir/src/child1.c.obj
-.PHONY : src/child1.c.obj
+src/child.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CHILD1.dir/build.make CMakeFiles/CHILD1.dir/src/child.c.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CHILD2.dir/build.make CMakeFiles/CHILD2.dir/src/child.c.obj
+.PHONY : src/child.c.obj
 
-src/child1.i: src/child1.c.i
-.PHONY : src/child1.i
-
-# target to preprocess a source file
-src/child1.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CHILD1.dir/build.make CMakeFiles/CHILD1.dir/src/child1.c.i
-.PHONY : src/child1.c.i
-
-src/child1.s: src/child1.c.s
-.PHONY : src/child1.s
-
-# target to generate assembly for a file
-src/child1.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CHILD1.dir/build.make CMakeFiles/CHILD1.dir/src/child1.c.s
-.PHONY : src/child1.c.s
-
-src/child2.obj: src/child2.c.obj
-.PHONY : src/child2.obj
-
-# target to build an object file
-src/child2.c.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CHILD2.dir/build.make CMakeFiles/CHILD2.dir/src/child2.c.obj
-.PHONY : src/child2.c.obj
-
-src/child2.i: src/child2.c.i
-.PHONY : src/child2.i
+src/child.i: src/child.c.i
+.PHONY : src/child.i
 
 # target to preprocess a source file
-src/child2.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CHILD2.dir/build.make CMakeFiles/CHILD2.dir/src/child2.c.i
-.PHONY : src/child2.c.i
+src/child.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CHILD1.dir/build.make CMakeFiles/CHILD1.dir/src/child.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CHILD2.dir/build.make CMakeFiles/CHILD2.dir/src/child.c.i
+.PHONY : src/child.c.i
 
-src/child2.s: src/child2.c.s
-.PHONY : src/child2.s
+src/child.s: src/child.c.s
+.PHONY : src/child.s
 
 # target to generate assembly for a file
-src/child2.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CHILD2.dir/build.make CMakeFiles/CHILD2.dir/src/child2.c.s
-.PHONY : src/child2.c.s
+src/child.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CHILD1.dir/build.make CMakeFiles/CHILD1.dir/src/child.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CHILD2.dir/build.make CMakeFiles/CHILD2.dir/src/child.c.s
+.PHONY : src/child.c.s
 
 src/main.obj: src/main.c.obj
 .PHONY : src/main.obj
@@ -265,12 +244,9 @@ help:
 	@echo "... CHILD1"
 	@echo "... CHILD2"
 	@echo "... OS_LAB"
-	@echo "... src/child1.obj"
-	@echo "... src/child1.i"
-	@echo "... src/child1.s"
-	@echo "... src/child2.obj"
-	@echo "... src/child2.i"
-	@echo "... src/child2.s"
+	@echo "... src/child.obj"
+	@echo "... src/child.i"
+	@echo "... src/child.s"
 	@echo "... src/main.obj"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

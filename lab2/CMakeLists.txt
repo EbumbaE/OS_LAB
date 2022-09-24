@@ -11,7 +11,7 @@ project(CHILD1 LANGUAGES C)
 project(CHILD2 LANGUAGES C)
 
 set(CHILD_HEADERS include/workWithFile.h include/include.h)
-set(CHILD_SOURCE src/workWithFile.c)
+set(CHILD_SOURCE src/workWithFile.c src/child.c)
 
-add_executable(CHILD1 ${CHILD_HEADERS} ${CHILD_SOURCE} src/child1.c)
-add_executable(CHILD2 ${CHILD_HEADERS} ${CHILD_SOURCE} src/child2.c)
+add_executable(CHILD1 ${CHILD_HEADERS} ${CHILD_SOURCE})
+add_executable(CHILD2 ${CHILD_HEADERS} ${CHILD_SOURCE})

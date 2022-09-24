@@ -11,8 +11,8 @@
 },
 {
   "directory": "C:/Users/Ivanh/Documents/OS_LAB/lab2/build",
-  "command": "C:/Users/Ivanh/gcc/bin/gcc.exe   -g -o CMakeFiles/CHILD1.dir/src/child1.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child1.c",
-  "file": "C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child1.c"
+  "command": "C:/Users/Ivanh/gcc/bin/gcc.exe   -g -o CMakeFiles/CHILD1.dir/src/child.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child.c",
+  "file": "C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child.c"
 },
 {
   "directory": "C:/Users/Ivanh/Documents/OS_LAB/lab2/build",
@@ -21,7 +21,7 @@
 },
 {
   "directory": "C:/Users/Ivanh/Documents/OS_LAB/lab2/build",
-  "command": "C:/Users/Ivanh/gcc/bin/gcc.exe   -g -o CMakeFiles/CHILD2.dir/src/child2.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child2.c",
-  "file": "C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child2.c"
+  "command": "C:/Users/Ivanh/gcc/bin/gcc.exe   -g -o CMakeFiles/CHILD2.dir/src/child.c.obj -c C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child.c",
+  "file": "C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child.c"
 }
 ]

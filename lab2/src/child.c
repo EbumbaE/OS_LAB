@@ -10,7 +10,7 @@ int main(){
     hStdout = GetStdHandle(STD_OUTPUT_HANDLE); 
     hStdin = GetStdHandle(STD_INPUT_HANDLE);
     if (hStdout == INVALID_HANDLE_VALUE || hStdin == INVALID_HANDLE_VALUE){
-        printf("Error in get pipe in child 1");
+        printf("Error in get pipe in child");
         return 1;
     } 
     
@@ -21,9 +21,9 @@ int main(){
         }
         DellVowel(file, "../out.txt");
     }
-    
+
     CloseHandle(hStdout);
     CloseHandle(hStdin);
-    
+
     return 0;
 }

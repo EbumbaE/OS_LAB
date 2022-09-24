@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child1.c" "CMakeFiles/CHILD1.dir/src/child1.c.obj" "gcc" "CMakeFiles/CHILD1.dir/src/child1.c.obj.d"
+  "C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child.c" "CMakeFiles/CHILD1.dir/src/child.c.obj" "gcc" "CMakeFiles/CHILD1.dir/src/child.c.obj.d"
   "C:/Users/Ivanh/Documents/OS_LAB/lab2/src/workWithFile.c" "CMakeFiles/CHILD1.dir/src/workWithFile.c.obj" "gcc" "CMakeFiles/CHILD1.dir/src/workWithFile.c.obj.d"
   )
 
