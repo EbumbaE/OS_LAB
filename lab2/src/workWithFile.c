@@ -1,4 +1,6 @@
 #include "../include/workWithFile.h"
+#include "stdlib.h"
+#include "stdio.h"
 
 int CheckVowel(char c){
     c = tolower(c);

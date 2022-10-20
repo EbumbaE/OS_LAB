@@ -1,29 +1,18 @@
 CMakeFiles/CHILD2.dir/src/child.c.obj: \
  C:/Users/Ivanh/Documents/OS_LAB/lab2/src/child.c \
  c:\users\ivanh\documents\os_lab\lab2\include\workwithfile.h \
- c:\users\ivanh\gcc\x86_64-w64-mingw32\include\stdlib.h \
+ c:\users\ivanh\documents\os_lab\lab2\include\include.h \
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\io.h \
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\crtdefs.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\corecrt.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\_mingw.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\_mingw_mac.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\_mingw_secapi.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\vadefs.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\sdks/_mingw_ddk.h \
- c:\users\ivanh\gcc\x86_64-w64-mingw32\include\corecrt_wstdlib.h \
- c:\users\ivanh\gcc\lib\gcc\x86_64-w64-mingw32\11.1.0\include-fixed\limits.h \
- c:\users\ivanh\gcc\lib\gcc\x86_64-w64-mingw32\11.1.0\include-fixed\syslimits.h \
- c:\users\ivanh\gcc\x86_64-w64-mingw32\include\limits.h \
- c:\users\ivanh\gcc\x86_64-w64-mingw32\include\crtdefs.h \
- c:\users\ivanh\gcc\x86_64-w64-mingw32\include\sec_api\stdlib_s.h \
- c:\users\ivanh\gcc\x86_64-w64-mingw32\include\malloc.h \
- c:\users\ivanh\gcc\x86_64-w64-mingw32\include\stdio.h \
- c:\users\ivanh\gcc\x86_64-w64-mingw32\include\corecrt_stdio_config.h \
- c:\users\ivanh\gcc\x86_64-w64-mingw32\include\_mingw_off_t.h \
- c:\users\ivanh\gcc\x86_64-w64-mingw32\include\swprintf.inl \
- c:\users\ivanh\gcc\x86_64-w64-mingw32\include\sec_api\stdio_s.h \
- c:\users\ivanh\documents\os_lab\lab2\include\include.h \
- c:\users\ivanh\gcc\x86_64-w64-mingw32\include\io.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\string.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\sec_api\string_s.h \
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\_mingw_off_t.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\fcntl.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\process.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\corecrt_startup.h \
@@ -90,6 +79,14 @@ CMakeFiles/CHILD2.dir/src/child.c.obj: \
  c:\users\ivanh\gcc\lib\gcc\x86_64-w64-mingw32\11.1.0\include\mmintrin.h \
  c:\users\ivanh\gcc\lib\gcc\x86_64-w64-mingw32\11.1.0\include\xmmintrin.h \
  c:\users\ivanh\gcc\lib\gcc\x86_64-w64-mingw32\11.1.0\include\mm_malloc.h \
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\stdlib.h \
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\corecrt_wstdlib.h \
+ c:\users\ivanh\gcc\lib\gcc\x86_64-w64-mingw32\11.1.0\include-fixed\limits.h \
+ c:\users\ivanh\gcc\lib\gcc\x86_64-w64-mingw32\11.1.0\include-fixed\syslimits.h \
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\limits.h \
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\sec_api\stdlib_s.h \
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\malloc.h \
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\errno.h \
  c:\users\ivanh\gcc\lib\gcc\x86_64-w64-mingw32\11.1.0\include\emmintrin.h \
  c:\users\ivanh\gcc\lib\gcc\x86_64-w64-mingw32\11.1.0\include\pmmintrin.h \
  c:\users\ivanh\gcc\lib\gcc\x86_64-w64-mingw32\11.1.0\include\tmmintrin.h \
@@ -261,4 +258,8 @@ CMakeFiles/CHILD2.dir/src/child.c.obj: \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\tchar.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\sec_api\tchar_s.h \
  c:\users\ivanh\gcc\x86_64-w64-mingw32\include\crtdbg.h \
- c:\users\ivanh\gcc\x86_64-w64-mingw32\include\sec_api\crtdbg_s.h
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\sec_api\crtdbg_s.h \
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\stdio.h \
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\corecrt_stdio_config.h \
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\swprintf.inl \
+ c:\users\ivanh\gcc\x86_64-w64-mingw32\include\sec_api\stdio_s.h

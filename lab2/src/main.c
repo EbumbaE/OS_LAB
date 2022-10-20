@@ -61,11 +61,9 @@ int main() {
     int r = rand() % 100 + 1;
     if (r <= 80) {
         WriteFile(pipe1[INPUT_WRITE], &file1, sizeof(file1), &dwWritten, NULL);
-        WriteFile(pipe2[INPUT_WRITE], "&", sizeof("&"), &dwWritten, NULL);
     }
     else{
         WriteFile(pipe2[INPUT_WRITE], &file2, sizeof(file2), &dwWritten, NULL);
-        WriteFile(pipe1[INPUT_WRITE], "&", sizeof("&"), &dwWritten, NULL);
     }
 
     CloseHandle(pipe1[INPUT_WRITE]);
