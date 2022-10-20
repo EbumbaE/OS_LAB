@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "process.h": "c",
-        "*.rh": "c",
-        "io.h": "c",
-        "types.h": "c",
-        "include.h": "c"
-    }
-}
