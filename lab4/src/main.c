@@ -21,6 +21,9 @@ int CreateChildProcess(TCHAR *childName){
 
 int main() {
 
+    _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
+    _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
+
     char file1[] = "../in1.txt", file2[] = "../in2.txt";
     // char file1[100], file2[100];
     // printf("Input first file: ");
@@ -82,7 +85,7 @@ int main() {
     }
 
     TCHAR file[100];
-    srand(rand());
+    srand(time(NULL));
     int r = rand() % 100 + 1;
     if (r <= 80) {
         _tcscpy(&file, _T(file1));
@@ -110,6 +113,17 @@ int main() {
     UnmapViewOfFile(pBuf);
     CloseHandle(hMapFile);
     CloseHandle(waitChildEndEvent);
+    CloseHandle(runChild1Event);
+    CloseHandle(runChild2Event);
+    CloseHandle(child1TerminateEvent);
+    CloseHandle(child2TerminateEvent);
+
+    if (_CrtDumpMemoryLeaks())
+        printf("memory leak\n");
+    else
+        printf("all is ok\n");
     
+    sleep(5);
+
     return 0;
 }

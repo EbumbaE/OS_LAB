@@ -21,7 +21,7 @@ HANDLE createPublicEvent(LPTSTR name){
 
 void checkNULLEvent(HANDLE event){
     if (event == NULL){
-        printf("Could not to create event (%d)", GetLastError());
+        printf("null event (%d)", GetLastError());
         FatalExit(GetLastError());
     }
 }
