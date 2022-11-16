@@ -1,4 +1,6 @@
 #pragma once
 #include "include.h"
 
-int CreateChildProcess(TCHAR *childName, HANDLE handle);
+HANDLE createPublicEvent(LPTSTR name);
+void checkNULLEvent(HANDLE event);
+int CreateChildProcess(TCHAR *childName);

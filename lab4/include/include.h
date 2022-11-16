@@ -15,7 +15,10 @@
 #include "stdlib.h"
 #include "stdio.h"
 
-int const INPUT_READ = 0, INPUT_WRITE = 1, 
-          OUTPUT_READ = 2, OUTPUT_WRITE = 3;
 #define BUF_SIZE 256
 TCHAR fileMappingName[]=TEXT("FileMappingObject");
+TCHAR nameWaitChildEndEvent[]=TEXT("WaitWorkChild");
+TCHAR nameRunChild1Event[]=TEXT("RunChild1");
+TCHAR nameRunChild2Event[]=TEXT("RunChild2");
+TCHAR nameChild1TerminateEvent[]=TEXT("TerminateChild1");
+TCHAR nameChild2TerminateEvent[]=TEXT("TerminateChild2");
