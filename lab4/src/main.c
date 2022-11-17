@@ -88,14 +88,14 @@ int main() {
     srand(time(NULL));
     int r = rand() % 100 + 1;
     if (r <= 80) {
-        _tcscpy(&file, _T(file1));
+        _tcscpy(&file, file1);
         CopyMemory((PVOID)pBuf, file, (_tcslen(file)*sizeof(TCHAR))); 
 
         trySignalToEvent(child2TerminateEvent);
         trySignalToEvent(runChild1Event);
     }
     else{
-        _tcscpy(&file, _T(file2));
+        _tcscpy(&file, file2);
         CopyMemory((PVOID)pBuf, file, (_tcslen(file)*sizeof(TCHAR))); 
 
         trySignalToEvent(child1TerminateEvent);
