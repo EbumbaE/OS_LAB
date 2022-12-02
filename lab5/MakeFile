@@ -1,0 +1,37 @@
+REALIZE_VERSION_LIB = 1
+
+CC = gcc
+CFLAGS = -g -c -Wall
+SOURCE_PKG = src/
+INCLUDE_PKG = include/
+BUILD_PKG = build/
+
+static: static.o lib.a
+	$(CC) $(BUILD_PKG)/static.o $(BUILD_PKG)/lib.a -o $(BUILD_PKG)/static
+
+dynamic: dynamic.o lib1.so lib2.so
+	$(CC) $(BUILD_PKG)/dynamic.o -o $(BUILD_PKG)/dynamic -lm
+
+static.o: $(SOURCE_PKG)/main_st.c
+	$(CC) $(CFLAGS) $(SOURCE_PKG)/main_st.c -o $(BUILD_PKG)/static.o
+
+dynamic.o: $(SOURCE_PKG)/main_dy.c 
+	$(CC) $(CFLAGS) $(SOURCE_PKG)/main_dy.c -o $(BUILD_PKG)/dynamic.o
+
+lib.a: lib$(REALIZE_VERSION_LIB).o
+	ar rcs $(BUILD_PKG)/lib.a $(BUILD_PKG)/lib$(REALIZE_VERSION_LIB).o
+
+lib1.so: lib1.o
+	$(CC) -shared $(BUILD_PKG)/lib1.o -o $(BUILD_PKG)/lib1.so 
+
+lib2.so: lib2.o
+	$(CC) -shared $(BUILD_PKG)/lib2.o -o $(BUILD_PKG)/lib2.so
+
+lib1.o:
+	$(CC) $(CFLAGS) -fpic $(SOURCE_PKG)/lib1.c -o $(BUILD_PKG)/lib1.o 
+
+lib2.o:
+	$(CC) $(CFLAGS) -fpic $(SOURCE_PKG)/lib2.c -o $(BUILD_PKG)/lib2.o
+
+clean:
+	cd build && RD /S/Q .
