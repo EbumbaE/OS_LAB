@@ -1,7 +1,7 @@
 REALIZE_VERSION_LIB = 1
 
 CC = gcc
-CFLAGS = -g -c -Wall
+CFLAGS = -c -Wall
 SOURCE_PKG = src/
 INCLUDE_PKG = include/
 BUILD_PKG = build/
@@ -10,7 +10,7 @@ static: static.o lib.a
 	$(CC) $(BUILD_PKG)/static.o $(BUILD_PKG)/lib.a -o $(BUILD_PKG)/static
 
 dynamic: dynamic.o lib1.so lib2.so
-	$(CC) $(BUILD_PKG)/dynamic.o -o $(BUILD_PKG)/dynamic -lm
+	$(CC) $(BUILD_PKG)/dynamic.o -o $(BUILD_PKG)/dynamic
 
 static.o: $(SOURCE_PKG)/main_st.c
 	$(CC) $(CFLAGS) $(SOURCE_PKG)/main_st.c -o $(BUILD_PKG)/static.o
