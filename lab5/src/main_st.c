@@ -23,7 +23,7 @@ int main() {
                 break;
                 
             default:
-                printf("1 arg - Pi(k)\n 2 arg1 arg2 - Square(a, b) \n -1 - exit");
+                printf("1 arg - Pi(k)\n2 arg1 arg2 - Square(a, b)\n-1 - exit\n");
                 break;
         }
         scanf("%d",&stage);

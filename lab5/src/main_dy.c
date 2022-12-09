@@ -5,7 +5,7 @@ int main() {
     _CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDERR);
     _CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 
-    char* libs[] = {"lib1.so","lib2.so"};
+    char* libs[] = {"liblib1.dll","liblib2.dll"};
     int numLib = 0;
 
     void* libHandle = NULL;
@@ -38,7 +38,7 @@ int main() {
                 }
                 int k;
                 scanf("%d", &k);
-                printf("%f\n",(Pi)(k));
+                printf("%0.3f\n",(Pi)(k));
                 break;
             
             case 2:
@@ -48,11 +48,11 @@ int main() {
                 }
                 float a, b;
                 scanf("%f %f", &a, &b);
-                printf("%f\n",(Square)(a, b));
+                printf("%0.3f\n",(Square)(a, b));
                 break;
 
             default:
-                printf("0 - change num lib \n 1 arg - Pi(k) \n 2 arg1 arg2 - Square(a, b) \n");
+                printf("0 - change num lib\n1 arg - Pi(k)\n2 arg1 arg2 - Square(a, b)\n-1 - exit\n");
                 break;
         }
         scanf("%d",&stage);
