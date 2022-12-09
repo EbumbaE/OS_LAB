@@ -21,6 +21,17 @@ add_library(
         ${LIBRARIES2_SOURCE}
 )
 
+add_library(
+        lib_st1 STATIC
+        ${LIBRARIES_INCLUDE}
+        ${LIBRARIES2_SOURCE}
+)
+
+add_library(
+        lib_st2 STATIC
+        ${LIBRARIES_INCLUDE}
+        ${LIBRARIES2_SOURCE}
+)
 
 if (UNIX)
         add_definitions(-DOS=UNIX)
@@ -38,6 +49,5 @@ add_executable(main_dy ${DYNAMIC_SOURCE})
 add_executable(main_st1 ${STATIC_SOURCE})
 add_executable(main_st2 ${STATIC_SOURCE})
 
-target_link_libraries(main_st1 PRIVATE lib1)
-target_link_libraries(main_st2 PRIVATE lib2)
-target_link_libraries(main_dy PRIVATE)
+target_link_libraries(main_st1 PRIVATE lib_st1)
+target_link_libraries(main_st2 PRIVATE lib_st2)
