@@ -24,7 +24,7 @@ add_library(
 add_library(
         lib_st1 STATIC
         ${LIBRARIES_INCLUDE}
-        ${LIBRARIES2_SOURCE}
+        ${LIBRARIES1_SOURCE}
 )
 
 add_library(
