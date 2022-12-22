@@ -11,6 +11,7 @@
 #include <crtdbg.h>
 #include <sys/types.h>
 #include <conio.h>
+#include <malloc.h>
 
 #include "stdlib.h"
 #include "stdio.h"

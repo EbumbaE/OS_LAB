@@ -9,8 +9,20 @@ add_library(
         ${TREE_INCLUDE}
 )
 
+set(ORCHESTRA_SOURCE src/orchestra.c)
+set(ORCHESTRA_INCLUDE include/orchestra.h include/tree.h)
+add_library(
+        lib_orchestra STATIC
+        ${ORCHESTRA_SOURCE}
+        ${ORCHESTRA_INCLUDE}
+)
+
 set(MAIN_HEADERS include/main.h)
 set(MAIN_SOURCE src/main.c)
-add_executable(OS_LAB ${MAIN_SOURCE} ${MAIN_HEADERS})
+add_executable(OS_LAB ${MAIN_SOURCE} ${MAIN_HEADERS}) 
+target_link_libraries(OS_LAB PRIVATE lib_orchestra)
 
-target_link_libraries(OS_LAB PRIVATE lib_tree)
+set(TEST_TREE_HEADERS include/test_tree.h)
+set(TEST_TREE_SOURCE src/test_tree.c)
+add_executable(test_tree ${TEST_TREE_SOURCE} ${TEST_TREE_HEADERS})
+target_link_libraries(test_tree PRIVATE lib_tree)
