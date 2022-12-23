@@ -5,7 +5,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <malloc.h>
-#include <stdio.h>
 
 #include "../include/tree.h"
 
@@ -36,6 +35,3 @@ int StartTimer(Conductor* conductor, int childID);
 int StopTimer(Conductor* conductor, int childID);
 int GetTime(Conductor* conductor, int childID);
 int ExecChild(char* command, int childID);
-
-int ErrorNotFoundParent = 1;
-int ErrorParentAlreadyExist = 2;

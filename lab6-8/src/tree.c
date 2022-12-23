@@ -1,6 +1,16 @@
 #include "../include/tree.h"
 
-int max(int a, int b) {
+int nodeExist(Node *root, int id) {
+    if (root == NULL) {
+        return 0;
+    }
+    if (root->id ==  id) {
+        return 1;
+    }
+    return nodeExist(root->left, id) || nodeExist(root->right, id);
+}
+
+int Max(int a, int b) {
     if (a > b) 
         return a;
     return b;
@@ -27,7 +37,7 @@ int balanceFactor(Node* node) {
 void fixHeight(Node* node) {
     int h1 = height(node->left);
     int h2 = height(node->right);
-    node->height = max(h1, h2) + 1;
+    node->height = Max(h1, h2) + 1;
 }
 
 Node* rotateRight(Node* p) {
@@ -150,8 +160,7 @@ void printTree(Node* tree) {
 int countSize(Node* tree) {
     if (tree == NULL) {
         return 0;
-    }
-    else {
+    } else {
         return countSize(tree->left) + countSize(tree->right) + 1;
     }
 }

@@ -17,10 +17,10 @@ add_library(
         ${ORCHESTRA_INCLUDE}
 )
 
-set(MAIN_HEADERS include/main.h)
+set(MAIN_HEADERS include/include.h)
 set(MAIN_SOURCE src/main.c)
 add_executable(OS_LAB ${MAIN_SOURCE} ${MAIN_HEADERS}) 
-target_link_libraries(OS_LAB PRIVATE lib_orchestra)
+target_link_libraries(OS_LAB PRIVATE lib_orchestra lib_tree)
 
 set(TEST_TREE_HEADERS include/test_tree.h)
 set(TEST_TREE_SOURCE src/test_tree.c)

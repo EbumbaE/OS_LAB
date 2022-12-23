@@ -1,5 +1,10 @@
 #include "../include/orchestra.h"
 
+const int ErrorNotFoundParent = 1;
+const int ErrorParentAlreadyExist = 2;
+const int ErrorNotFoundChild = 1;
+const int ErrorChildAlreadyExist = 1;
+
 Conductor* NewConductor(){
     Conductor* conductor = (Conductor*)malloc(sizeof(conductor));
     conductor->size = 0;
@@ -11,6 +16,7 @@ void DeleteConductor(Conductor* conductor) {
     while (conductor->begin != NULL) {
         p = conductor->begin;
         conductor->begin = conductor->begin->next;
+        deleteTree(p->root);
         free(p);
     }
     conductor->size = 0;
@@ -33,6 +39,7 @@ int AddParent(Conductor* conductor, int id) {
         parent->id = id;
         parent->next = NULL;
         parent->prev = NULL;
+        parent->root = NULL;
 
         conductor->begin = parent;
         conductor->end = parent;
@@ -46,6 +53,7 @@ int AddParent(Conductor* conductor, int id) {
         parent->id = id;
         parent->next = NULL;
         parent->prev = conductor->end;
+        parent->root = NULL;
 
         conductor->end->next = parent;
         conductor->end = parent;
@@ -55,14 +63,14 @@ int AddParent(Conductor* conductor, int id) {
 
 int DeleteParent(Conductor* conductor, int id) {
     if (conductor->begin == NULL) {
-        return;
+        return 0;
     } 
 
     if (conductor->size == 1 && conductor->begin->id == id) {
         deleteTree(conductor->begin->root);
         free(conductor->begin);
         conductor = NewConductor();
-        return;
+        return 0;
     }
 
     Parent* pIter = conductor->begin;
@@ -94,6 +102,7 @@ int DeleteParent(Conductor* conductor, int id) {
         }
         pIter = next;
     }
+    return 0;
 }
 
 int AmountParents(Conductor* c) {
@@ -108,6 +117,9 @@ int AddChild(Conductor* conductor, int parentID, int childID) {
     Parent *pIter = conductor->begin;
     while (pIter != NULL) {
         if (pIter->id == parentID) {
+            if (!nodeExist(pIter->root, childID)) {
+                return ErrorNotFoundChild;
+            }
             pIter->root = insertNode(pIter->root, childID);
             break;
         } 
@@ -128,9 +140,13 @@ int DeleteChild(Conductor* conductor, int parentID, int childID) {
     Parent *pIter = conductor->begin;
     while (pIter != NULL) {
         if (pIter->id == parentID) {
-            pIter->root = deleteNode(pIter->root, childID);          // todo Error child not exist
+            if (!nodeExist(pIter->root, childID)) {
+                return ErrorNotFoundChild;
+            }
+            pIter->root = deleteNode(pIter->root, childID);
             break;
         } 
+        pIter = pIter->next;
     }
 
     if (pIter == NULL) {
@@ -141,17 +157,17 @@ int DeleteChild(Conductor* conductor, int parentID, int childID) {
 }
 
 int StartTimer(Conductor* c, int childID) {
-    
+    return 0;
 }
 
 int StopTimer(Conductor* c, int childID) {
-
+    return 0;
 }
 
 int GetTime(Conductor* c, int childID) {
-
+    return 0;
 }
 
 int ExecChild(char* command, int childID) {
-
+    return 0;
 }

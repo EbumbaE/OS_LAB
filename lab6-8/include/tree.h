@@ -14,7 +14,8 @@ struct _tnode {
 };
 typedef struct _tnode Node;
 
-int max(int a, int b);
+int nodeExist(Node *root, int id);
+int Max(int a, int b);
 Node* makeNode(int id);
 
 int height(Node* node);

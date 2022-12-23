@@ -12,6 +12,9 @@
 #include <sys/types.h>
 #include <conio.h>
 #include <malloc.h>
+#include <assert.h>
 
 #include "stdlib.h"
 #include "stdio.h"
+
+#include "../include/orchestra.h"
