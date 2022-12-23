@@ -22,6 +22,10 @@ set(MAIN_SOURCE src/main.c)
 add_executable(OS_LAB ${MAIN_SOURCE} ${MAIN_HEADERS}) 
 target_link_libraries(OS_LAB PRIVATE lib_orchestra lib_tree)
 
+set(CHILD_HEADERS include/child.h)
+set(CHILD_SOURCE src/child.c)
+add_executable(CHILD ${CHILD_SOURCE} ${CHILD_HEADERS})
+
 set(TEST_TREE_HEADERS include/test_tree.h)
 set(TEST_TREE_SOURCE src/test_tree.c)
 add_executable(test_tree ${TEST_TREE_SOURCE} ${TEST_TREE_HEADERS})

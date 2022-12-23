@@ -2,8 +2,9 @@
 
 const int ErrorNotFoundParent = 1;
 const int ErrorParentAlreadyExist = 2;
-const int ErrorNotFoundChild = 1;
-const int ErrorChildAlreadyExist = 1;
+const int ErrorNotFoundChild = 3;
+const int ErrorChildAlreadyExist = 4;
+const int ErrorInCreateChild = 5;
 
 Conductor* NewConductor(){
     Conductor* conductor = (Conductor*)malloc(sizeof(conductor));
@@ -120,6 +121,10 @@ int AddChild(Conductor* conductor, int parentID, int childID) {
             if (!nodeExist(pIter->root, childID)) {
                 return ErrorNotFoundChild;
             }
+            int err = CreateChildProcess(TEXT("../build/CHILD1.exe"));
+            if (!err){
+                return ErrorInCreateChild;
+            }
             pIter->root = insertNode(pIter->root, childID);
             break;
         } 
@@ -170,4 +175,22 @@ int GetTime(Conductor* c, int childID) {
 
 int ExecChild(char* command, int childID) {
     return 0;
+}
+
+int CreateChildProcess(TCHAR *childName){
+    TCHAR *szCmdline = childName;
+    PROCESS_INFORMATION piProcInfo; 
+    STARTUPINFO siStartInfo;
+    BOOL bSuccess = FALSE; 
+
+    ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
+    ZeroMemory(&siStartInfo, sizeof(STARTUPINFO));
+    siStartInfo.cb = sizeof(STARTUPINFO); 
+
+    bSuccess = CreateProcess(NULL, szCmdline, NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo); 
+
+    CloseHandle(piProcInfo.hProcess);
+    CloseHandle(piProcInfo.hThread);
+
+    return bSuccess;
 }

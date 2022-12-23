@@ -1,10 +1,15 @@
 #pragma once
 
-#include <stdio.h>
+#include <io.h>
+#include <fcntl.h>
+#include <process.h>
 #include <math.h>
-#include <ctype.h>
-#include <stdlib.h>
+#include <tchar.h>
+#include <crtdbg.h>
+#include <sys/types.h>
+#include <conio.h>
 #include <malloc.h>
+#include <windows.h>
 
 #include "../include/tree.h"
 
