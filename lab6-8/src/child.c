@@ -1,16 +1,29 @@
 #include "../include/child.h"
 
 int main() {
-    char command[10];
-    scanf("%s", command);
 
+    DWORD dwRead;
+    char command[10];
     clock_t start = -1, stop = -1, timer = 0;
-     
-    while(strcmp(command, "exit") != 0) {
+
+    HANDLE hStdin, hStdout; 
+    hStdout = GetStdHandle(STD_OUTPUT_HANDLE); 
+    hStdin = GetStdHandle(STD_INPUT_HANDLE);
+    if (hStdout == INVALID_HANDLE_VALUE || hStdin == INVALID_HANDLE_VALUE){
+        printf("Error in get pipe in child");
+        return 1;
+    } 
+    
+    ReadFile(hStdin, command, sizeof(command), &dwRead, NULL);
+    
+    while(command[0] != '&') {
+        scanf("%s", command);  
+        
         if (strcmp(command, "start") == 0) {
             start = clock();
             stop = -1;
         }
+        
         if (strcmp(command, "stop") == 0) {
             stop = clock();
             if (start != -1 && stop != -1) { 
@@ -19,6 +32,7 @@ int main() {
             start = -1;
             stop = -1;
         }
+
         if (strcmp(command, "time") == 0) {
             if (start != -1 && stop == -1) {
                 printf("%d\n", timer + clock() - start);
@@ -26,6 +40,6 @@ int main() {
                 printf("%d\n", timer); 
             }
         }
-        scanf("%s", command);
+        ReadFile(hStdin, command, sizeof(command), &dwRead, NULL);
     }
 }

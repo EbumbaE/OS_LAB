@@ -1,11 +1,5 @@
 #include "../include/orchestra.h"
 
-const int ErrorNotFoundParent = 1;
-const int ErrorParentAlreadyExist = 2;
-const int ErrorNotFoundChild = 3;
-const int ErrorChildAlreadyExist = 4;
-const int ErrorInCreateChild = 5;
-
 Conductor* NewConductor(){
     Conductor* conductor = (Conductor*)malloc(sizeof(conductor));
     conductor->size = 0;
@@ -60,6 +54,7 @@ int AddParent(Conductor* conductor, int id) {
         conductor->end = parent;
         conductor->size++;
     }
+    return 0;
 }
 
 int DeleteParent(Conductor* conductor, int id) {
@@ -100,6 +95,7 @@ int DeleteParent(Conductor* conductor, int id) {
             }
             deleteTree(pIter->root);
             free(pIter);
+            break;
         }
         pIter = next;
     }
@@ -118,16 +114,27 @@ int AddChild(Conductor* conductor, int parentID, int childID) {
     Parent *pIter = conductor->begin;
     while (pIter != NULL) {
         if (pIter->id == parentID) {
-            if (!nodeExist(pIter->root, childID)) {
-                return ErrorNotFoundChild;
+            if (nodeExist(pIter->root, childID)) {
+                return ErrorChildAlreadyExist;
             }
-            int err = CreateChildProcess(TEXT("../build/CHILD1.exe"));
+
+            SECURITY_ATTRIBUTES saAttr; 
+            saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
+            saAttr.bInheritHandle = TRUE; 
+            saAttr.lpSecurityDescriptor = NULL; 
+            HANDLE pipe[2];
+            if (!CreatePipe(&pipe[0], &pipe[1], &saAttr, 0)){
+                return ErrorInCreatePipe;
+            }
+            
+            int err = CreateChildProcess(TEXT("CHILD.exe"), pipe);
             if (!err){
-                return ErrorInCreateChild;
+                return ErrorInCreateChildProccess;
             }
-            pIter->root = insertNode(pIter->root, childID);
+            pIter->root = insertNode(pIter->root, childID, &pipe);
             break;
         } 
+        pIter = pIter->next;
     }
 
     if (pIter == NULL) {
@@ -169,15 +176,27 @@ int StopTimer(Conductor* c, int childID) {
     return 0;
 }
 
-int GetTime(Conductor* c, int childID) {
+int GetTime(Conductor* c, int childID, int *t) {
     return 0;
 }
 
-int ExecChild(char* command, int childID) {
+int PingNode(Conductor* conductor, int id) {
+    if (conductor->begin == NULL) {
+        return 0;
+    }
+
+    Parent *pIter = conductor->begin;
+    while (pIter != NULL) {
+        if (pIter->id == id || nodeExist(pIter->root, id)) {
+            return 1;
+        }
+        pIter = pIter->next;
+    }
+ 
     return 0;
 }
 
-int CreateChildProcess(TCHAR *childName){
+int CreateChildProcess(TCHAR *childName, HANDLE pipe[2]){
     TCHAR *szCmdline = childName;
     PROCESS_INFORMATION piProcInfo; 
     STARTUPINFO siStartInfo;
@@ -186,6 +205,9 @@ int CreateChildProcess(TCHAR *childName){
     ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
     ZeroMemory(&siStartInfo, sizeof(STARTUPINFO));
     siStartInfo.cb = sizeof(STARTUPINFO); 
+    siStartInfo.hStdInput = pipe[0];
+    siStartInfo.hStdOutput = pipe[1];
+    siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
 
     bSuccess = CreateProcess(NULL, szCmdline, NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo); 
 

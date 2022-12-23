@@ -4,7 +4,7 @@ int nodeExist(Node *root, int id) {
     if (root == NULL) {
         return 0;
     }
-    if (root->id ==  id) {
+    if (root->id == id) {
         return 1;
     }
     return nodeExist(root->left, id) || nodeExist(root->right, id);
@@ -16,11 +16,12 @@ int Max(int a, int b) {
     return b;
 }
 
-Node* makeNode(int id) {
+Node* makeNode(int id, HANDLE pipe) {
     Node *node = (Node*)malloc(sizeof(Node));
     node->id = id;
     node->height = 1;
     node->left = node->right = NULL;
+    node->pipe = pipe;
     return node;
 }
 
@@ -75,14 +76,14 @@ Node* balance(Node* p) {
     return p;
 }
 
-Node* insertNode(Node* root, int id) {
+Node* insertNode(Node* root, int id, HANDLE pipe[2]) {
     if (!root) {
-        return makeNode(id);
+        return makeNode(id, pipe);
     }
     if (id < root->id) {
-        root->left = insertNode(root->left, id);
+        root->left = insertNode(root->left, id, pipe);
     } else {
-        root->right = insertNode(root->right, id);
+        root->right = insertNode(root->right, id, pipe);
     }
     return balance(root);
 }
@@ -112,6 +113,8 @@ Node* deleteNode(Node* root, int id) {
     if (root->left != NULL) {
         Node* c = root;
         root = root->left;
+        CloseHandle(c->pipe[0]);
+        CloseHandle(c->pipe[1]);
         free(c);
         c = NULL;
         return root;

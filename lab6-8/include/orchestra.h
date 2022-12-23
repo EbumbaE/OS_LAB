@@ -38,5 +38,13 @@ int DeleteChild(Conductor* conductor, int parentID, int childID);
 
 int StartTimer(Conductor* conductor, int childID);
 int StopTimer(Conductor* conductor, int childID);
-int GetTime(Conductor* conductor, int childID);
-int ExecChild(char* command, int childID);
+int GetTime(Conductor* conductor, int childID, int *t);
+
+int PingNode(Conductor* conductor, int id);
+
+#define ErrorNotFoundParent 1
+#define ErrorParentAlreadyExist 2
+#define ErrorNotFoundChild 3
+#define ErrorChildAlreadyExist 4
+#define ErrorInCreateChildProccess 5
+#define ErrorInCreatePipe 6
