@@ -1,0 +1,5 @@
+{
+  "cmake.configureSettings": {
+    "CMAKE_TOOLCHAIN_FILE": "C:/Users/Ivanh/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  }
+}

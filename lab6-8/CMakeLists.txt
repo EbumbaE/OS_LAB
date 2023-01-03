@@ -10,7 +10,7 @@ add_library(
 )
 
 set(ORCHESTRA_SOURCE src/orchestra.c)
-set(ORCHESTRA_INCLUDE include/orchestra.h include/tree.h)
+set(ORCHESTRA_INCLUDE include/orchestra.h include/tree.h include/msg_q.h)
 add_library(
         lib_orchestra STATIC
         ${ORCHESTRA_SOURCE}
@@ -21,6 +21,15 @@ set(MAIN_HEADERS include/include.h)
 set(MAIN_SOURCE src/main.c)
 add_executable(OS_LAB ${MAIN_SOURCE} ${MAIN_HEADERS}) 
 target_link_libraries(OS_LAB PRIVATE lib_orchestra lib_tree)
+
+INCLUDE_DIRECTORIES(
+        C:/Users/Ivanh/vcpkg/installed/x86-windows/include/
+)
+find_library(ZeroMQ_LIBRARY
+        NAMES zmq
+        PATHS C:/Users/Ivanh/vcpkg/installed/x86-windows/lib/
+        )
+target_link_libraries(OS_LAB PRIVATE ${ZeroMQ_LIBRARY})
 
 set(CHILD_HEADERS include/child.h)
 set(CHILD_SOURCE src/child.c)

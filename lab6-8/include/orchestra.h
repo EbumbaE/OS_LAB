@@ -12,6 +12,7 @@
 #include <windows.h>
 
 #include "../include/tree.h"
+#include "../include/msg_q.h"
 
 typedef struct _parent {
     Node *root;
