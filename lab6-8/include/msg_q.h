@@ -25,39 +25,30 @@
 #define TERMINATOR (-3000)
 
 typedef enum {
-    create,
-    delete,
-    exec,
-    success
-} cmd_type;
+    CMD_START,
+    CMD_STOP,
+    CMD_TIME,
+    CMD_EXIT
+} cmdType;
 
 typedef struct {
-    cmd_type  cmd;
-    int       value;
-    char      str[MAX_LEN];
-    char      sub[MAX_LEN];
-    int       res[MAX_LEN];
+    cmdType   cmd;
+    int       time;
 } message;
 
-void  clear_token(message* msg);
-void  create_addr(char* addr, int id);
-void  bind_zmq_socket(void* socket, char* endpoint);
+void  clearMessage(message* msg);
+void  createAddr(char* addr, int id);
+void  bindZmqSocket(void* socket, char* endpoint);
 
-void* create_zmq_context();
-void* create_zmq_socket(void* context, const int type);
+void* createZmqContext();
+void* createZmqSocket(void* context, const int type);
 
-void  connect_zmq_socket(void* socket, char* endpoint);
-void  disconnect_zmq_socket(void* socket, char* endpoint);
-void  reconnect_zmq_socket(void* socket, int to, char* addr);
-void  close_zmq_socket(void* socket);
-void  destroy_zmq_context(void* context);
+void  connectZmqSocket(void* socket, char* endpoint);
+void  disconnectZmqSocket(void* socket, char* endpoint);
+void  reconnectZmqSocket(void* socket, int to, char* addr);
+void  closeZmqSocket(void* socket);
+void  deleteZmqContext(void* context);
 
-bool receive_msg_wait(void* socket, message* token);
-bool send_msg_wait(void* socket, message* token);
-bool ping_process(int id);
-
-int* create_vector();
-int length(const int* ptr);
-int* push_back(int* ptr, int value);
-void erase(int* ptr, int value);
-void destroy(int* ptr);
+int receiveMessage(void* socket, message* msg);
+int sendMessage(void* socket, message* msg);
+int pingProcess(int id);

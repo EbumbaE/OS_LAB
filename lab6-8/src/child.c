@@ -1,30 +1,36 @@
 #include "../include/child.h"
+#include "../include/msg_q.h"
 
 int main() {
-
+    
     DWORD dwRead;
-    char command[10];
-    clock_t start = -1, stop = -1, timer = 0;
-
-    HANDLE hStdin, hStdout; 
-    hStdout = GetStdHandle(STD_OUTPUT_HANDLE); 
+    HANDLE hStdin; 
     hStdin = GetStdHandle(STD_INPUT_HANDLE);
-    if (hStdout == INVALID_HANDLE_VALUE || hStdin == INVALID_HANDLE_VALUE){
+    if (hStdin == INVALID_HANDLE_VALUE){
         printf("Error in get pipe in child");
         return 1;
     } 
+    char id[30];
+    ReadFile(hStdin, id, sizeof(id), &dwRead, NULL);
+
+    void *context = createZmqContext();
+    void *responder = createZmqSocket(context, ZMQ_REP);
+    char addr[30] = TCP_SOCKET_PATTERN;
+    strcat(addr, id);
+    bindZmqSocket(responder, addr);
+
+    clock_t start = -1, stop = -1, timer = 0;
+
+    message msg;
     
-    ReadFile(hStdin, command, sizeof(command), &dwRead, NULL);
-    
-    while(command[0] != '&') {
-        scanf("%s", command);  
-        
-        if (strcmp(command, "start") == 0) {
+    while(msg.cmd != CMD_EXIT) {
+
+        if (msg.cmd == CMD_START) {
             start = clock();
             stop = -1;
         }
         
-        if (strcmp(command, "stop") == 0) {
+        if (msg.cmd == CMD_STOP) {
             stop = clock();
             if (start != -1 && stop != -1) { 
                 timer += stop - start;
@@ -33,13 +39,15 @@ int main() {
             stop = -1;
         }
 
-        if (strcmp(command, "time") == 0) {
+        if (msg.cmd == CMD_TIME) {
             if (start != -1 && stop == -1) {
-                printf("%d\n", timer + clock() - start);
+                msg.time =  timer + clock() - start;
             } else {
-                printf("%d\n", timer); 
+                msg.time = timer;
             }
+            sendMessage(responder, &msg);
         }
-        ReadFile(hStdin, command, sizeof(command), &dwRead, NULL);
+
+        receiveMessage(responder, &msg);
     }
 }
