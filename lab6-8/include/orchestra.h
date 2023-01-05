@@ -48,10 +48,10 @@ int DeleteChild(Conductor* conductor, int parentID, int childID);
 
 int PingNode(Conductor* conductor, int id);
 
-#define ErrorNotFoundParent 1
-#define ErrorParentAlreadyExist 2
-#define ErrorNotFoundChild 3
-#define ErrorChildAlreadyExist 4
-#define ErrorInCreateChildProccess 5
-#define ErrorInCreatePipe 6
-#define ErrorNotFoundNode 7
+#define ErrorNotFoundParent         1
+#define ErrorParentAlreadyExist     2
+#define ErrorNotFoundChild          3
+#define ErrorChildAlreadyExist      4
+#define ErrorInCreateChildProccess  5
+#define ErrorInCreatePipe           6
+#define ErrorNotFoundNode           7

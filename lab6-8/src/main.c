@@ -7,19 +7,21 @@ int main(){
 
     int err;
     err = OrchestraHandleRequest(0);
-    errorHandle(err);
+    if (err == 0) {
+        printf("error to handle request %d", GetLastError());
+    }
 
     printf("user id: %d\n", getpid());
 
     void *context = zmq_ctx_new();
-    void *requester = create_zmq_socket(context, ZMQ_REQ);
+    void *requester = createZmqSocket(context, ZMQ_REQ);
     char addr[MN] = SERVER_SOCKET_PATTERN;
     int last_created = -1;
     message msg = {0, 0, "", ""};
     
     char *command;
     int parentID, childID, t, id;
-    while (1) {
+    while(1) {
         printf("Do: ");
         scanf("%s", command);
 

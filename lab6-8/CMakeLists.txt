@@ -11,11 +11,6 @@ add_library(
         ${TREE_INCLUDE}
 )
 
-set(ORCHESTRA_SOURCE src/orchestra.c)
-set(ORCHESTRA_INCLUDE include/orchestra.h include/tree.h)
-add_executable(ORCHESTRA ${ORCHESTRA_SOURCE} ${ORCHESTRA_HEADERS})
-target_link_libraries(ORCHESTRA PRIVATE lib_msgq libzmq libzmq-static)
-
 set(MSGQ_SOURCE src/msg_q.c)
 set(MSGQ_INCLUDE include/msg_q.h)
 add_library(
@@ -45,3 +40,8 @@ set(TEST_TREE_HEADERS include/test_tree.h)
 set(TEST_TREE_SOURCE src/test_tree.c)
 add_executable(test_tree ${TEST_TREE_SOURCE} ${TEST_TREE_HEADERS})
 target_link_libraries(test_tree PRIVATE lib_tree)
+
+set(ORCHESTRA_SOURCE src/orchestra.c)
+set(ORCHESTRA_INCLUDE include/orchestra.h include/tree.h)
+add_executable(ORCHESTRA ${ORCHESTRA_SOURCE} ${ORCHESTRA_HEADERS})
+target_link_libraries(ORCHESTRA PRIVATE lib_msgq lib_tree libzmq libzmq-static)

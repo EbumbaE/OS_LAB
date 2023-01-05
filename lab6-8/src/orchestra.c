@@ -139,6 +139,7 @@ int AddChild(Conductor* conductor, int parentID, int childID) {
                 return ErrorInCreateChildProccess;
             }
             pIter->root = insertNode(pIter->root, childID);
+
             break;
         } 
         pIter = pIter->next;
@@ -191,6 +192,29 @@ int PingNode(Conductor* conductor, int id) {
     return 0;
 }
 
+int ExecNode(Conductor* conductor, void* requester, message *msg) {
+    if (conductor->begin == NULL) {
+        return ErrorNotFoundParent;
+    }
+
+    Parent *pIter = conductor->begin;
+    while (pIter != NULL) {
+        if (nodeExist(pIter->root, (*msg).childID)) {
+            reconnectZmqSocket(requester, (*msg).childID, SERVER_SOCKET_PATTERN);
+            sendMessage(requester, msg);
+            receiveMessage(requester, msg);
+            break;
+        }
+        pIter = pIter->next;
+    }
+
+    if (pIter == NULL) {
+        return ErrorNotFoundNode;
+    }
+
+    return 0;
+}
+
 int CreateChildProcess(TCHAR *childName, HANDLE pipe[2]){
     TCHAR *szCmdline = childName;
     PROCESS_INFORMATION piProcInfo; 
@@ -212,7 +236,8 @@ int CreateChildProcess(TCHAR *childName, HANDLE pipe[2]){
 }
 
 int main() {
-    printf("orchestra: %d\n", getpid());
+    int pid = getpid();
+    printf("orchestra: %d\n", pid);
 
     DWORD dwRead;
     HANDLE hStdin; 
@@ -221,20 +246,20 @@ int main() {
         printf("Error in get pipe in child");
         return 1;
     } 
-    char id[30];
+    int id;
     ReadFile(hStdin, id, sizeof(id), &dwRead, NULL);
 
     Conductor* conductor = NewConductor();
     
-    void *context = create_zmq_context();
-    void *responder = create_zmq_socket(context, ZMQ_REP);
+    void *context = createZmqContext();
+    void *responder = createZmqSocket(context, ZMQ_REP);
     char addr[30] = TCP_SOCKET_PATTERN;
     strcat(addr, id);
     bindZmqSocket(responder, addr);
 
-    message msg = {0, 0, "", ""};
+    message msg = {-1, 0, "", ""};
     char *command;
-    int parentID, childID, t, id;
+    int parentID, childID, t;
     int err;
     while (msg.cmd != CMD_EXIT) {
         switch (msg.cmd) {
@@ -263,7 +288,7 @@ int main() {
             break;
 
         case PING_NODE:
-            if (PingNode(conductor, id)) {
+            if (PingNode(conductor, msg.pid)) {
                 printf("OK: 1\n");
             }
             msg.error = err;

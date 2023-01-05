@@ -9,8 +9,9 @@ int main() {
         printf("Error in get pipe in child");
         return 1;
     } 
-    char id[30];
-    ReadFile(hStdin, id, sizeof(id), &dwRead, NULL);
+    int getID[3];
+    ReadFile(hStdin, getID, sizeof(getID), &dwRead, NULL);
+    int id = getID[0], childLeftID = getID[1], childRightID = getID[2];
 
     void *context = createZmqContext();
     void *responder = createZmqSocket(context, ZMQ_REP);
