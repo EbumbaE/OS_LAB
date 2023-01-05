@@ -10,7 +10,6 @@
 struct _tnode {
     int id;
     int height;
-    HANDLE *pipe;
     struct Node* left;
     struct Node* right;
 };
@@ -28,7 +27,7 @@ Node* rotateLeft(Node* q);
 
 Node* balance(Node* p);
 
-Node* insertNode(Node* root, int id, HANDLE pipe[2]);
+Node* insertNode(Node* root, int id);
 
 int searchMin(Node* root);
 Node* deleteNode(Node* root, int id);

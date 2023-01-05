@@ -16,12 +16,11 @@ int Max(int a, int b) {
     return b;
 }
 
-Node* makeNode(int id, HANDLE pipe) {
+Node* makeNode(int id) {
     Node *node = (Node*)malloc(sizeof(Node));
     node->id = id;
     node->height = 1;
     node->left = node->right = NULL;
-    node->pipe = pipe;
     return node;
 }
 
@@ -76,14 +75,14 @@ Node* balance(Node* p) {
     return p;
 }
 
-Node* insertNode(Node* root, int id, HANDLE pipe[2]) {
+Node* insertNode(Node* root, int id) {
     if (!root) {
-        return makeNode(id, pipe);
+        return makeNode(id);
     }
     if (id < root->id) {
-        root->left = insertNode(root->left, id, pipe);
+        root->left = insertNode(root->left, id);
     } else {
-        root->right = insertNode(root->right, id, pipe);
+        root->right = insertNode(root->right, id);
     }
     return balance(root);
 }
@@ -113,8 +112,6 @@ Node* deleteNode(Node* root, int id) {
     if (root->left != NULL) {
         Node* c = root;
         root = root->left;
-        CloseHandle(c->pipe[0]);
-        CloseHandle(c->pipe[1]);
         free(c);
         c = NULL;
         return root;

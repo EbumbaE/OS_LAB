@@ -24,7 +24,7 @@ int main() {
         case 1:
             printf("input id: ");
             scanf("%d", &x);
-            tree = insertNode(tree, x, NULL);
+            tree = insertNode(tree, x);
             break;
         case 2:
             printf("\n");

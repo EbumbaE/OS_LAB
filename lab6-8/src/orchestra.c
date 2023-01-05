@@ -4,6 +4,11 @@ Conductor* NewConductor(){
     Conductor* conductor = (Conductor*)malloc(sizeof(conductor));
     conductor->size = 0;
     conductor->begin = NULL;
+
+    conductor->context = zmq_ctx_new();
+    conductor->requester = createZmqSocket(conductor->context, ZMQ_REQ);
+
+    return conductor;
 }
 
 void DeleteConductor(Conductor* conductor) {
@@ -123,15 +128,17 @@ int AddChild(Conductor* conductor, int parentID, int childID) {
             saAttr.bInheritHandle = TRUE; 
             saAttr.lpSecurityDescriptor = NULL; 
             HANDLE pipe[2];
+            DWORD dwWritten;
             if (!CreatePipe(&pipe[0], &pipe[1], &saAttr, 0)){
                 return ErrorInCreatePipe;
             }
-            
+            WriteFile(pipe[0], &childID, sizeof(childID), &dwWritten, NULL);
+
             int err = CreateChildProcess(TEXT("CHILD.exe"), pipe);
             if (!err){
                 return ErrorInCreateChildProccess;
             }
-            pIter->root = insertNode(pIter->root, childID, &pipe);
+            pIter->root = insertNode(pIter->root, childID);
             break;
         } 
         pIter = pIter->next;
@@ -168,18 +175,6 @@ int DeleteChild(Conductor* conductor, int parentID, int childID) {
     return 0;
 }
 
-int StartTimer(Conductor* c, int childID) {
-    return 0;
-}
-
-int StopTimer(Conductor* c, int childID) {
-    return 0;
-}
-
-int GetTime(Conductor* c, int childID, int *t) {
-    return 0;
-}
-
 int PingNode(Conductor* conductor, int id) {
     if (conductor->begin == NULL) {
         return 0;
@@ -188,7 +183,7 @@ int PingNode(Conductor* conductor, int id) {
     Parent *pIter = conductor->begin;
     while (pIter != NULL) {
         if (pIter->id == id || nodeExist(pIter->root, id)) {
-            return 1;
+            return ErrorNotFoundNode;
         }
         pIter = pIter->next;
     }
@@ -206,7 +201,6 @@ int CreateChildProcess(TCHAR *childName, HANDLE pipe[2]){
     ZeroMemory(&siStartInfo, sizeof(STARTUPINFO));
     siStartInfo.cb = sizeof(STARTUPINFO); 
     siStartInfo.hStdInput = pipe[0];
-    siStartInfo.hStdOutput = pipe[1];
     siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
 
     bSuccess = CreateProcess(NULL, szCmdline, NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo); 
@@ -215,4 +209,71 @@ int CreateChildProcess(TCHAR *childName, HANDLE pipe[2]){
     CloseHandle(piProcInfo.hThread);
 
     return bSuccess;
+}
+
+int main() {
+    printf("orchestra: %d\n", getpid());
+
+    DWORD dwRead;
+    HANDLE hStdin; 
+    hStdin = GetStdHandle(STD_INPUT_HANDLE);
+    if (hStdin == INVALID_HANDLE_VALUE){
+        printf("Error in get pipe in child");
+        return 1;
+    } 
+    char id[30];
+    ReadFile(hStdin, id, sizeof(id), &dwRead, NULL);
+
+    Conductor* conductor = NewConductor();
+    
+    void *context = create_zmq_context();
+    void *responder = create_zmq_socket(context, ZMQ_REP);
+    char addr[30] = TCP_SOCKET_PATTERN;
+    strcat(addr, id);
+    bindZmqSocket(responder, addr);
+
+    message msg = {0, 0, "", ""};
+    char *command;
+    int parentID, childID, t, id;
+    int err;
+    while (msg.cmd != CMD_EXIT) {
+        switch (msg.cmd) {
+        case CREATE_CHILD:
+            err = AddChild(conductor, msg.parentID, msg.childID);
+            msg.error = err;
+            sendMessage(responder, &msg);
+            break;
+
+        case CREATE_PARENT:
+            err = AddParent(conductor, parentID);
+            msg.error = err;
+            sendMessage(responder, &msg);
+            break;
+        
+        case DELETE_CHILD:
+            err = DeleteChild(conductor, parentID, childID);
+            msg.error = err;
+            sendMessage(responder, &msg);
+            break;
+
+        case DELETE_PARENT:
+            err = DeleteParent(conductor, parentID);                
+            msg.error = err;
+            sendMessage(responder, &msg);
+            break;
+
+        case PING_NODE:
+            if (PingNode(conductor, id)) {
+                printf("OK: 1\n");
+            }
+            msg.error = err;
+            sendMessage(responder, &msg);
+            break;
+
+        case CMD_START || CMD_STOP || CMD_TIME:
+            sendMessage(responder, &msg);
+        }
+    }
+
+    DeleteConductor(conductor);
 }

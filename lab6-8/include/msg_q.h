@@ -7,7 +7,7 @@
 #include <assert.h>
 
 #define MAX_LEN 64
-#define MN 30
+#define MN      30
 
 #define ERR_ZMQ_CTX            100
 #define ERR_ZMQ_SOCKET         101
@@ -17,10 +17,10 @@
 #define ERR_ZMQ_DISCONNECT     105
 #define ERR_ZMQ_MSG            106
 
-#define SERVER_SOCKET_PATTERN        "tcp://localhost:"
-#define PING_SOCKET_PATTERN          "inproc://ping"
-#define TCP_SOCKET_PATTERN           "tcp://*:"
-#define MIN_ADDR 5555
+#define SERVER_SOCKET_PATTERN   "tcp://localhost:"
+#define PING_SOCKET_PATTERN     "inproc://ping"
+#define TCP_SOCKET_PATTERN      "tcp://*:"
+#define MIN_ADDR                5555
 
 #define TERMINATOR (-3000)
 
@@ -28,12 +28,22 @@ typedef enum {
     CMD_START,
     CMD_STOP,
     CMD_TIME,
-    CMD_EXIT
+    CMD_EXIT,
+
+    CREATE_CHILD,
+    CREATE_PARENT,
+    DELETE_CHILD,
+    DELETE_PARENT,
+    PING_NODE,
+    EXIT
 } cmdType;
 
 typedef struct {
-    cmdType   cmd;
-    int       time;
+    cmdType     cmd;
+    int         time;
+    int         parentID, childID;
+    int         pid;
+    int         error;
 } message;
 
 void  clearMessage(message* msg);

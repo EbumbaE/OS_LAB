@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.22.0)
 project(OS_LAB LANGUAGES C)
 
+add_definitions("-DCMAKE_TOOLCHAIN_FILE=C:/Users/Ivanh/vcpkg/scripts/buildsystems/vcpkg.cmake")
+
 set(TREE_SOURCE src/tree.c)
 set(TREE_INCLUDE include/tree.h)
 add_library(
@@ -11,11 +13,8 @@ add_library(
 
 set(ORCHESTRA_SOURCE src/orchestra.c)
 set(ORCHESTRA_INCLUDE include/orchestra.h include/tree.h)
-add_library(
-        lib_orchestra STATIC
-        ${ORCHESTRA_SOURCE}
-        ${ORCHESTRA_INCLUDE}
-)
+add_executable(ORCHESTRA ${ORCHESTRA_SOURCE} ${ORCHESTRA_HEADERS})
+target_link_libraries(ORCHESTRA PRIVATE lib_msgq libzmq libzmq-static)
 
 set(MSGQ_SOURCE src/msg_q.c)
 set(MSGQ_INCLUDE include/msg_q.h)
@@ -33,8 +32,7 @@ find_package(ZeroMQ CONFIG REQUIRED)
 
 set(MAIN_HEADERS include/include.h)
 set(MAIN_SOURCE src/main.c)
-add_executable(OS_LAB ${MAIN_SOURCE} ${MAIN_HEADERS}) 
-target_link_libraries(OS_LAB PRIVATE lib_orchestra lib_tree lib_msgq)
+add_executable(OS_LAB ${MAIN_SOURCE} ${MAIN_HEADERS})
 target_link_libraries(OS_LAB PRIVATE lib_msgq libzmq libzmq-static)
 
 
@@ -42,7 +40,6 @@ set(CHILD_HEADERS include/child.h)
 set(CHILD_SOURCE src/child.c)
 add_executable(CHILD ${CHILD_SOURCE} ${CHILD_HEADERS})
 target_link_libraries(CHILD PRIVATE lib_msgq libzmq libzmq-static)
-
 
 set(TEST_TREE_HEADERS include/test_tree.h)
 set(TEST_TREE_SOURCE src/test_tree.c)

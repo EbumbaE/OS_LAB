@@ -2,7 +2,6 @@
 #include "../include/msg_q.h"
 
 int main() {
-    
     DWORD dwRead;
     HANDLE hStdin; 
     hStdin = GetStdHandle(STD_INPUT_HANDLE);
@@ -18,6 +17,8 @@ int main() {
     char addr[30] = TCP_SOCKET_PATTERN;
     strcat(addr, id);
     bindZmqSocket(responder, addr);
+
+    printf("id: %d\n", getpid());
 
     clock_t start = -1, stop = -1, timer = 0;
 

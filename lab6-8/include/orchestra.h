@@ -19,12 +19,21 @@ typedef struct _parent {
     int id;
     struct _parent* next;
     struct _parent* prev;
+
+    void *context;
+    void *requester;
+    char queryCommand[MN];
 } Parent;
 
 typedef struct _conductor {
     Parent* begin;
     Parent* end;
     int size;
+
+    void *context;
+    void *requester;
+    char queryCommand[MN];
+    char addr[MN];
 } Conductor;
 
 Conductor* NewConductor();
@@ -37,10 +46,6 @@ int AmountParents(Conductor* conductor);
 int AddChild(Conductor* conductor, int parentID, int childID);
 int DeleteChild(Conductor* conductor, int parentID, int childID);
 
-int StartTimer(Conductor* conductor, int childID);
-int StopTimer(Conductor* conductor, int childID);
-int GetTime(Conductor* conductor, int childID, int *t);
-
 int PingNode(Conductor* conductor, int id);
 
 #define ErrorNotFoundParent 1
@@ -49,3 +54,4 @@ int PingNode(Conductor* conductor, int id);
 #define ErrorChildAlreadyExist 4
 #define ErrorInCreateChildProccess 5
 #define ErrorInCreatePipe 6
+#define ErrorNotFoundNode 7
