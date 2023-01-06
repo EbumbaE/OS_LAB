@@ -15,9 +15,10 @@ int main() {
     void *context = createZmqContext();
     void *responder = createZmqSocket(context, ZMQ_REP);
     void *requester = createZmqSocket(context, ZMQ_REQ);
-    char childAddr[30] = TCP_SOCKET_PATTERN;
-    strcat(childAddr, id);
-    bindZmqSocket(responder, childAddr);
+    char parentAddr[30] = SERVER_SOCKET_PATTERN;
+    
+    createAddr(&parentAddr, id + MIN_ADDR);
+    bindZmqSocket(responder, parentAddr);
 
     clock_t start = -1, stop = -1, timer = 0;
 

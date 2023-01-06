@@ -19,21 +19,12 @@ typedef struct _parent {
     int id;
     struct _parent* next;
     struct _parent* prev;
-
-    void *context;
-    void *requester;
-    char queryCommand[MN];
 } Parent;
 
 typedef struct _conductor {
     Parent* begin;
     Parent* end;
     int size;
-
-    void *context;
-    void *requester;
-    char queryCommand[MN];
-    char addr[MN];
 } Conductor;
 
 Conductor* NewConductor();

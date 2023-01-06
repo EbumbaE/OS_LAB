@@ -1,5 +1,3 @@
-#include <stdbool.h>
-#include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -19,10 +17,7 @@
 
 #define SERVER_SOCKET_PATTERN   "tcp://localhost:"
 #define PING_SOCKET_PATTERN     "inproc://ping"
-#define TCP_SOCKET_PATTERN      "tcp://*:"
 #define MIN_ADDR                5555
-
-#define TERMINATOR (-3000)
 
 typedef enum {
     CMD_START,
@@ -48,15 +43,14 @@ typedef struct {
     int         trace[100];
 } message;
 
-void  clearMessage(message* msg);
 void  createAddr(char* addr, int id);
-void  bindZmqSocket(void* socket, char* endpoint);
+void  bindZmqSocket(void* socket, char* addr);
 
 void* createZmqContext();
 void* createZmqSocket(void* context, const int type);
 
-void  connectZmqSocket(void* socket, char* endpoint);
-void  disconnectZmqSocket(void* socket, char* endpoint);
+void  connectZmqSocket(void* socket, char* addr);
+void  disconnectZmqSocket(void* socket, char* addr);
 void  reconnectZmqSocket(void* socket, int to, char* addr);
 void  closeZmqSocket(void* socket);
 void  deleteZmqContext(void* context);

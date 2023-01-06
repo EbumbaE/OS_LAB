@@ -27,6 +27,9 @@ int main(){
         scanf("%s", &command);
 
         if (strcmp(&command, "exit") == 0) {
+            msg.cmd = EXIT;
+            sendMessage(requester, &msg);
+            receiveMessage(requester, &msg);
             break;
         }
 
@@ -223,7 +226,7 @@ int OrchestraHandleRequest(int baseID) {
     if (!CreatePipe(&pipe[0], &pipe[1], &saAttr, 0)){
         return ErrorInCreatePipe;
     }
-    WriteFile(pipe[0], &baseID, sizeof(baseID), &dwWritten, NULL);
+    WriteFile(pipe[1], &baseID, sizeof(baseID), &dwWritten, NULL);
 
     int err = CreateChildProcess(TEXT("ORCHESTRA.exe"), pipe);
     return err;

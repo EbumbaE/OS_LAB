@@ -9,10 +9,6 @@ void createAddr(char* addr, int id) {
     strcat(addr, str);
 }
 
-void clearMessage(message* msg) {
-    msg->cmd = CMD_EXIT;
-}
-
 void* createZmqContext() {
     void* context = zmq_ctx_new();
     if (context == NULL) {
@@ -23,24 +19,24 @@ void* createZmqContext() {
     return context;
 }
 
-void bindZmqSocket(void* socket, char* endpoint) {
-    if (zmq_bind(socket, endpoint) != 0) {
+void bindZmqSocket(void* socket, char* addr) {
+    if (zmq_bind(socket, addr) != 0) {
         fprintf(stderr, "[%d] ", getpid());
         perror("ERROR bindZmqSocket ");
         exit(ERR_ZMQ_BIND);
     }
 }
 
-void disconnectZmqSocket(void* socket, char* endpoint) {
-    if (zmq_disconnect(socket, endpoint) != 0) {
+void disconnectZmqSocket(void* socket, char* addr) {
+    if (zmq_disconnect(socket, addr) != 0) {
         fprintf(stderr, "[%d] ", getpid());
         perror("ERROR disconnectZmqSocket ");
         exit(ERR_ZMQ_DISCONNECT);
     }
 }
 
-void connectZmqSocket(void* socket, char* endpoint) {
-    if (zmq_connect(socket, endpoint) != 0) {
+void connectZmqSocket(void* socket, char* addr) {
+    if (zmq_connect(socket, addr) != 0) {
         fprintf(stderr, "[%d] ", getpid());
         perror("ERROR connectZmqSocket ");
         exit(ERR_ZMQ_CONNECT);
@@ -96,7 +92,7 @@ int receiveMessage(void* socket, message* msg) {
         perror("ERROR zmq_msg_close ");
         exit(ERR_ZMQ_MSG);
     }
-    return true;
+    return 1;
 }
 
 int sendMessage(void* socket, message* msg) {
@@ -114,23 +110,23 @@ int sendMessage(void* socket, message* msg) {
     }
     if (zmq_msg_send(&zmqMsg, socket, 0) == -1) {
         zmq_msg_close(&zmqMsg);
-        return false;
+        return 0;
     }
-    return true;
+    return 1;
 }
 
 int pingProcess(int id) {
     char addr_monitor[30];
     char addr_connection[30];
-    char str[30];
-    memset(str, 0, 30);
-    sprintf(str, "%d", id);
+    char strID[30];
+    memset(strID, 0, 30);
+    sprintf(strID, "%d", id);
     memset(addr_monitor, 0, 30);
     memcpy(addr_monitor, PING_SOCKET_PATTERN, sizeof(PING_SOCKET_PATTERN));
-    strcat(addr_monitor, str);
+    strcat(addr_monitor, strID);
     memset(addr_connection, 0, 30);
     memcpy(addr_connection, SERVER_SOCKET_PATTERN, sizeof(SERVER_SOCKET_PATTERN));
-    strcat(addr_connection, str);
+    strcat(addr_connection, strID);
 
     void* context = zmq_ctx_new();
     void *requester = zmq_socket(context, ZMQ_REQ);
@@ -151,8 +147,8 @@ int pingProcess(int id) {
     zmq_msg_close(&msg);
     zmq_ctx_destroy(context);
     if (event == ZMQ_EVENT_CONNECT_RETRIED) {
-        return false;
+        return 0;
     } else {
-        return true;
+        return 1;
     }
 }

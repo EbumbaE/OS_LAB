@@ -9,14 +9,15 @@ int main() {
         printf("Error in get pipe in child");
         return 1;
     } 
-    int id[3];
+    int id;
     ReadFile(hStdin, id, sizeof(id), &dwRead, NULL);
 
     void *context = createZmqContext();
     void *responder = createZmqSocket(context, ZMQ_REP);
     void *requester = createZmqSocket(context, ZMQ_REQ);
-    char childAddr[30] = TCP_SOCKET_PATTERN;
-    strcat(childAddr, id);
+    char childAddr[30] = SERVER_SOCKET_PATTERN;
+    
+    createAddr(&childAddr, id + MIN_ADDR);
     bindZmqSocket(responder, childAddr);
 
     clock_t start = -1, stop = -1, timer = 0;

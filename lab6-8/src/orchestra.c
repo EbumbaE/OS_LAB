@@ -5,9 +5,6 @@ Conductor* NewConductor(){
     conductor->size = 0;
     conductor->begin = NULL;
 
-    conductor->context = zmq_ctx_new();
-    conductor->requester = createZmqSocket(conductor->context, ZMQ_REQ);
-
     return conductor;
 }
 
@@ -70,7 +67,7 @@ int AddParent(Conductor* conductor, int id) {
     if (!CreatePipe(&pipe[0], &pipe[1], &saAttr, 0)){
         return ErrorInCreatePipe;
     }
-    WriteFile(pipe[0], &id, sizeof(id), &dwWritten, NULL);
+    WriteFile(pipe[1], &id, sizeof(id), &dwWritten, NULL);
 
     int err = CreateChildProcess(TEXT("PARENT.exe"), pipe);
     if (!err){
@@ -149,7 +146,7 @@ int AddChild(Conductor* conductor, int parentID, int childID) {
             if (!CreatePipe(&pipe[0], &pipe[1], &saAttr, 0)){
                 return ErrorInCreatePipe;
             }
-            WriteFile(pipe[0], &childID, sizeof(childID), &dwWritten, NULL);
+            WriteFile(pipe[1], &childID, sizeof(childID), &dwWritten, NULL);
 
             int err = CreateChildProcess(TEXT("CHILD.exe"), pipe);
             if (!err){
@@ -209,34 +206,11 @@ int PingNode(Conductor* conductor, int id) {
     return ErrorNotFoundNode;
 }
 
-int ExecNode(Conductor* conductor, void* requester, message *msg) {
-    if (conductor->begin == NULL) {
-        return ErrorNotFoundParent;
-    }
-
-    Parent *pIter = conductor->begin;
-    while (pIter != NULL) {
-        if (nodeExist(pIter->root, (*msg).childID)) {
-            char addr[MN] = SERVER_SOCKET_PATTERN;
-            reconnectZmqSocket(requester, (*msg).childID, addr);
-            sendMessage(requester, msg);
-            receiveMessage(requester, msg);
-            break;
-        }
-        pIter = pIter->next;
-    }
-
-    if (pIter == NULL) {
-        return ErrorNotFoundNode;
-    }
-
-    return 0;
-}
-
 int CountTrace(Conductor *conductor, int *trace, int childID) {
     Parent *pIter = conductor->begin;
     while (pIter != NULL) {
         if (nodeExist(pIter->root, childID)) {
+            memset(trace, 0, 100);
             trace[0] = pIter->id;
             countTrace(pIter->root, childID, trace, 1, 0);
             return 0;
@@ -267,9 +241,8 @@ int CreateChildProcess(TCHAR *childName, HANDLE pipe[2]){
 
 int main() {
     DWORD dwRead, dwWrite;
-    HANDLE hStdin, hStdOut; 
+    HANDLE hStdin; 
     hStdin = GetStdHandle(STD_INPUT_HANDLE);
-    hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hStdin == INVALID_HANDLE_VALUE){
         printf("Error in get pipe in child");
         return 1;
@@ -286,11 +259,11 @@ int main() {
     void *responder = createZmqSocket(context, ZMQ_REP);
     void *requester = createZmqSocket(context, ZMQ_REQ);
     
-    char orchestraAddr[30] = TCP_SOCKET_PATTERN;
-    strcat(orchestraAddr, orchestraID + MIN_ADDR);
+    char orchestraAddr[30] = SERVER_SOCKET_PATTERN;
+    createAddr(&orchestraAddr, orchestraID + MIN_ADDR);
     bindZmqSocket(responder, orchestraAddr);
 
-    char parentAddr[30] = TCP_SOCKET_PATTERN;    
+    char parentAddr[30] = SERVER_SOCKET_PATTERN;    
 
     message msg = {cmd: -1};
     char *command;
@@ -313,7 +286,7 @@ int main() {
                 sendMessage(responder, &msg);
                 break;
             }
-
+            
             err = CountTrace(conductor, &(msg.trace), childID);
             if (err != 0) {
                 msg.error = err;
