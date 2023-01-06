@@ -6,28 +6,48 @@ int main() {
     HANDLE hStdin; 
     hStdin = GetStdHandle(STD_INPUT_HANDLE);
     if (hStdin == INVALID_HANDLE_VALUE){
-        printf("Error in get pipe in child");
+        printf("Error in get pipe in parent");
         return 1;
     } 
-    int getID[3];
-    ReadFile(hStdin, getID, sizeof(getID), &dwRead, NULL);
-    int id = getID[0], childLeftID = getID[1], childRightID = getID[2];
+    int id;
+    ReadFile(hStdin, id, sizeof(id), &dwRead, NULL);
 
     void *context = createZmqContext();
     void *responder = createZmqSocket(context, ZMQ_REP);
-    char addr[30] = TCP_SOCKET_PATTERN;
-    strcat(addr, id);
-    bindZmqSocket(responder, addr);
-
-    printf("id: %d\n", getpid());
+    void *requester = createZmqSocket(context, ZMQ_REQ);
+    char childAddr[30] = TCP_SOCKET_PATTERN;
+    strcat(childAddr, id);
+    bindZmqSocket(responder, childAddr);
 
     clock_t start = -1, stop = -1, timer = 0;
 
     message msg;
     
-    while(msg.cmd != CMD_EXIT) {
+    while(1) {
+        receiveMessage(responder, &msg);
+        if (msg.childID != id) {
+            int to = msg.trace[0];
+            
+            int i = 1;
+            while(msg.trace[i] != 0) {
+                msg.trace[i - 1] = msg.trace[i];
+                i++;
+            }
+            msg.trace[i - 1] = 0;
 
-                
-
+            char addr[MN] = SERVER_SOCKET_PATTERN;
+            reconnectZmqSocket(requester, to + MIN_ADDR, addr);
+            sendMessage(requester, &msg);
+            receiveMessage(requester, &msg);
+            
+            sendMessage(responder, &msg);
+            continue;
+        } 
+        if (msg.cmd == DELETE_CHILD) {
+            msg.error = 0;
+            msg.cmd = DONE;
+            sendMessage(responder, &msg);
+            break;
+        }
     }
 }

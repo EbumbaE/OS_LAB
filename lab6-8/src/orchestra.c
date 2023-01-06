@@ -59,6 +59,23 @@ int AddParent(Conductor* conductor, int id) {
         conductor->end = parent;
         conductor->size++;
     }
+    
+    //
+    SECURITY_ATTRIBUTES saAttr; 
+    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
+    saAttr.bInheritHandle = TRUE; 
+    saAttr.lpSecurityDescriptor = NULL; 
+    HANDLE pipe[2];
+    DWORD dwWritten;
+    if (!CreatePipe(&pipe[0], &pipe[1], &saAttr, 0)){
+        return ErrorInCreatePipe;
+    }
+    WriteFile(pipe[0], &id, sizeof(id), &dwWritten, NULL);
+
+    int err = CreateChildProcess(TEXT("PARENT.exe"), pipe);
+    if (!err){
+        return ErrorInCreateChildProccess;
+    }
     return 0;
 }
 
@@ -184,12 +201,12 @@ int PingNode(Conductor* conductor, int id) {
     Parent *pIter = conductor->begin;
     while (pIter != NULL) {
         if (pIter->id == id || nodeExist(pIter->root, id)) {
-            return ErrorNotFoundNode;
+            return pingProcess(id + MIN_ADDR);
         }
         pIter = pIter->next;
     }
  
-    return 0;
+    return ErrorNotFoundNode;
 }
 
 int ExecNode(Conductor* conductor, void* requester, message *msg) {
@@ -200,7 +217,8 @@ int ExecNode(Conductor* conductor, void* requester, message *msg) {
     Parent *pIter = conductor->begin;
     while (pIter != NULL) {
         if (nodeExist(pIter->root, (*msg).childID)) {
-            reconnectZmqSocket(requester, (*msg).childID, SERVER_SOCKET_PATTERN);
+            char addr[MN] = SERVER_SOCKET_PATTERN;
+            reconnectZmqSocket(requester, (*msg).childID, addr);
             sendMessage(requester, msg);
             receiveMessage(requester, msg);
             break;
@@ -216,18 +234,15 @@ int ExecNode(Conductor* conductor, void* requester, message *msg) {
 }
 
 int CountTrace(Conductor *conductor, int *trace, int childID) {
-
-    int countTrace = 0;
     Parent *pIter = conductor->begin;
     while (pIter != NULL) {
         if (nodeExist(pIter->root, childID)) {
-            trace[countTrace] = pIter->id;
-            countTrace++;
-            
+            trace[0] = pIter->id;
+            countTrace(pIter->root, childID, trace, 1, 0);
+            return 0;
         }
     }
-    
-    return 0;
+    return ErrorNotFoundNode;
 }
 
 int CreateChildProcess(TCHAR *childName, HANDLE pipe[2]){
@@ -286,21 +301,27 @@ int main() {
 
         switch (msg.cmd) {
         case CREATE_CHILD:
+            if (msg.childID < 1) {
+                msg.error = ErrorChildAlreadyExist;
+                sendMessage(responder, &msg);
+                break;
+            }
+
             err = AddChild(conductor, msg.parentID, msg.childID);
             if (err != 0) {
                 msg.error = err;
-                receiveMessage(responder, &msg);
+                sendMessage(responder, &msg);
                 break;
             }
 
-            err = CountTrace(conductor, &msg.trace, childID);
+            err = CountTrace(conductor, &(msg.trace), childID);
             if (err != 0) {
                 msg.error = err;
-                receiveMessage(responder, &msg);
+                sendMessage(responder, &msg);
                 break;
             }
 
-            reconnect_zmq_socket(requester, parentID + MIN_ADDR, parentAddr);
+            reconnectZmqSocket(requester, parentID + MIN_ADDR, parentAddr);
             sendMessage(requester, &msg);
             receiveMessage(requester, &msg);
             
@@ -308,6 +329,12 @@ int main() {
             break;
 
         case CREATE_PARENT:
+            if (msg.parentID < 1) {
+                msg.error = ErrorParentAlreadyExist;
+                receiveMessage(responder, &msg);
+                break;
+            }
+
             err = AddParent(conductor, parentID);
             msg.error = err;
             receiveMessage(responder, &msg);
@@ -317,18 +344,17 @@ int main() {
             err = DeleteChild(conductor, parentID, childID);
             if (err != 0) {
                 msg.error = err;
-                receiveMessage(responder, &msg);
+                sendMessage(responder, &msg);
                 break;
             }
 
-            err = CountTrace(conductor, &msg.trace, childID);
+            err = CountTrace(conductor, &(msg.trace), childID);
             if (err != 0) {
                 msg.error = err;
-                receiveMessage(responder, &msg);
+                sendMessage(responder, &msg);
                 break;
             }
-
-            reconnect_zmq_socket(requester, parentID + MIN_ADDR, parentAddr);
+            reconnectZmqSocket(requester, parentID + MIN_ADDR, parentAddr);
             sendMessage(requester, &msg);
             receiveMessage(requester, &msg);
             
@@ -339,7 +365,7 @@ int main() {
             err = DeleteParent(conductor, parentID);                
             if (err != 0) {
                 msg.error = err;
-                receiveMessage(responder, &msg);
+                sendMessage(responder, &msg);
                 break;
             }
             sendMessage(responder, &msg);
@@ -351,14 +377,14 @@ int main() {
             break;
 
         case CMD_START || CMD_STOP || CMD_TIME:
-            err = CountTrace(conductor, &msg.trace, childID);
+            err = CountTrace(conductor, &(msg.trace), childID);
             if (err != 0) {
                 msg.error = err;
                 receiveMessage(responder, &msg);
                 break;
             }
 
-            reconnect_zmq_socket(requester, parentID + MIN_ADDR, parentAddr);
+            reconnectZmqSocket(requester, parentID + MIN_ADDR, parentAddr);
             sendMessage(requester, &msg);
             receiveMessage(requester, &msg);
             

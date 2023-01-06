@@ -35,7 +35,8 @@ typedef enum {
     DELETE_CHILD,
     DELETE_PARENT,
     PING_NODE,
-    EXIT
+    EXIT,
+    DONE
 } cmdType;
 
 typedef struct {

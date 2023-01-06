@@ -36,6 +36,11 @@ set(CHILD_SOURCE src/child.c)
 add_executable(CHILD ${CHILD_SOURCE} ${CHILD_HEADERS})
 target_link_libraries(CHILD PRIVATE lib_msgq libzmq libzmq-static)
 
+set(PARENT_HEADERS include/parent.h)
+set(PARENT_SOURCE src/parent.c)
+add_executable(PARENT ${PARENT_SOURCE} ${PARENT_HEADERS})
+target_link_libraries(PARENT PRIVATE lib_msgq libzmq libzmq-static)
+
 set(TEST_TREE_HEADERS include/test_tree.h)
 set(TEST_TREE_SOURCE src/test_tree.c)
 add_executable(test_tree ${TEST_TREE_SOURCE} ${TEST_TREE_HEADERS})

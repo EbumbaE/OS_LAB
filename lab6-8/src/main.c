@@ -16,7 +16,8 @@ int main(){
 
     void *context = createZmqContext();
     void *requester = createZmqSocket(context, ZMQ_REQ);
-    reconnectZmqSocket(requester, id_orchestra + MIN_ADDR, SERVER_SOCKET_PATTERN);
+    char addr[MN] = SERVER_SOCKET_PATTERN;
+    reconnectZmqSocket(requester, id_orchestra + MIN_ADDR, addr);
     message msg;
     
     char command[20];
