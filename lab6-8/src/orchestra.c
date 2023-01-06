@@ -236,12 +236,10 @@ int CreateChildProcess(TCHAR *childName, HANDLE pipe[2]){
 }
 
 int main() {
-    int pid = getpid();
-    printf("orchestra: %d\n", pid);
-
-    DWORD dwRead;
-    HANDLE hStdin; 
+    DWORD dwRead, dwWrite;
+    HANDLE hStdin, hStdOut; 
     hStdin = GetStdHandle(STD_INPUT_HANDLE);
+    hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (hStdin == INVALID_HANDLE_VALUE){
         printf("Error in get pipe in child");
         return 1;
@@ -249,6 +247,8 @@ int main() {
     int id;
     ReadFile(hStdin, id, sizeof(id), &dwRead, NULL);
 
+    int pid = getpid();
+    
     Conductor* conductor = NewConductor();
     
     void *context = createZmqContext();

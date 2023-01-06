@@ -19,19 +19,19 @@ int main(){
     int last_created = -1;
     message msg = {0, 0, "", ""};
     
-    char *command;
+    char command[20];
     int parentID, childID, t, id;
     while(1) {
         printf("Do: ");
-        scanf("%s", command);
+        scanf("%s", &command);
 
-        if (strcmp(command, "exit") == 0) {
+        if (strcmp(&command, "exit") == 0) {
             break;
         }
 
-        if (strcmp(command, "create") == 0) {
-            scanf("%s", command);
-            if (strcmp(command, "child") == 0) {
+        if (strcmp(&command, "create") == 0) {
+            scanf("%s", &command);
+            if (strcmp(&command, "child") == 0) {
                 scanf("%d %d", &childID, &parentID);
                 
                 msg.cmd = CREATE_CHILD;
@@ -48,7 +48,7 @@ int main(){
 
                 continue;
             } 
-            if (strcmp(command, "parent") == 0) {
+            if (strcmp(&command, "parent") == 0) {
                 scanf("%d", &parentID);
                 
                 msg.cmd = CREATE_PARENT;
@@ -95,8 +95,8 @@ int main(){
         }
 
         if (strcmp(command, "exec") == 0) {
-            scanf("%d %s", &childID, command);
-            if (strcmp(command, "start") == 0) {
+            scanf("%d %s", &childID, &command);
+            if (strcmp(&command, "start") == 0) {
                 
                 msg.cmd = CMD_START;
                 msg.childID = childID;
@@ -107,7 +107,7 @@ int main(){
 
                 continue;
             } 
-            if (strcmp(command, "stop") == 0) {
+            if (strcmp(&command, "stop") == 0) {
 
                 msg.cmd = CMD_STOP;
                 msg.childID = childID;
@@ -118,7 +118,7 @@ int main(){
 
                 continue;
             } 
-            if (strcmp(command, "time") == 0) {
+            if (strcmp(&command, "time") == 0) {
 
                 msg.cmd = CMD_TIME;
                 msg.childID = childID;
@@ -137,7 +137,7 @@ int main(){
             } 
         }
 
-        if (strcmp(command, "ping") == 0) {
+        if (strcmp(&command, "ping") == 0) {
             scanf("%d", &id);
             
             msg.cmd = PING_NODE;
