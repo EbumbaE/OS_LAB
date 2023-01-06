@@ -38,6 +38,7 @@ typedef struct _conductor {
 
 Conductor* NewConductor();
 void DeleteConductor(Conductor* conductor);
+int CountTrace(Conductor *conductor, int *trace, int childID);
 
 int AddParent(Conductor* conductor, int id);
 int DeleteParent(Conductor* conductor, int id);

@@ -44,6 +44,7 @@ typedef struct {
     int         parentID, childID;
     int         pid;
     int         error;
+    int         trace[100];
 } message;
 
 void  clearMessage(message* msg);

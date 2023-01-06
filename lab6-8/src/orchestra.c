@@ -215,6 +215,21 @@ int ExecNode(Conductor* conductor, void* requester, message *msg) {
     return 0;
 }
 
+int CountTrace(Conductor *conductor, int *trace, int childID) {
+
+    int countTrace = 0;
+    Parent *pIter = conductor->begin;
+    while (pIter != NULL) {
+        if (nodeExist(pIter->root, childID)) {
+            trace[countTrace] = pIter->id;
+            countTrace++;
+            
+        }
+    }
+    
+    return 0;
+}
+
 int CreateChildProcess(TCHAR *childName, HANDLE pipe[2]){
     TCHAR *szCmdline = childName;
     PROCESS_INFORMATION piProcInfo; 
@@ -244,8 +259,9 @@ int main() {
         printf("Error in get pipe in child");
         return 1;
     } 
-    int id;
-    ReadFile(hStdin, id, sizeof(id), &dwRead, NULL);
+
+    int orchestraID;
+    ReadFile(hStdin, orchestraID, sizeof(orchestraID), &dwRead, NULL);
 
     int pid = getpid();
     
@@ -253,49 +269,99 @@ int main() {
     
     void *context = createZmqContext();
     void *responder = createZmqSocket(context, ZMQ_REP);
-    char addr[30] = TCP_SOCKET_PATTERN;
-    strcat(addr, id);
-    bindZmqSocket(responder, addr);
+    void *requester = createZmqSocket(context, ZMQ_REQ);
+    
+    char orchestraAddr[30] = TCP_SOCKET_PATTERN;
+    strcat(orchestraAddr, orchestraID + MIN_ADDR);
+    bindZmqSocket(responder, orchestraAddr);
 
-    message msg = {-1, 0, "", ""};
+    char parentAddr[30] = TCP_SOCKET_PATTERN;    
+
+    message msg = {cmd: -1};
     char *command;
     int parentID, childID, t;
     int err;
     while (msg.cmd != CMD_EXIT) {
+        receiveMessage(responder, &msg);
+
         switch (msg.cmd) {
         case CREATE_CHILD:
             err = AddChild(conductor, msg.parentID, msg.childID);
-            msg.error = err;
+            if (err != 0) {
+                msg.error = err;
+                receiveMessage(responder, &msg);
+                break;
+            }
+
+            err = CountTrace(conductor, &msg.trace, childID);
+            if (err != 0) {
+                msg.error = err;
+                receiveMessage(responder, &msg);
+                break;
+            }
+
+            reconnect_zmq_socket(requester, parentID + MIN_ADDR, parentAddr);
+            sendMessage(requester, &msg);
+            receiveMessage(requester, &msg);
+            
             sendMessage(responder, &msg);
             break;
 
         case CREATE_PARENT:
             err = AddParent(conductor, parentID);
             msg.error = err;
-            sendMessage(responder, &msg);
+            receiveMessage(responder, &msg);
             break;
         
         case DELETE_CHILD:
             err = DeleteChild(conductor, parentID, childID);
-            msg.error = err;
+            if (err != 0) {
+                msg.error = err;
+                receiveMessage(responder, &msg);
+                break;
+            }
+
+            err = CountTrace(conductor, &msg.trace, childID);
+            if (err != 0) {
+                msg.error = err;
+                receiveMessage(responder, &msg);
+                break;
+            }
+
+            reconnect_zmq_socket(requester, parentID + MIN_ADDR, parentAddr);
+            sendMessage(requester, &msg);
+            receiveMessage(requester, &msg);
+            
             sendMessage(responder, &msg);
             break;
 
         case DELETE_PARENT:
             err = DeleteParent(conductor, parentID);                
-            msg.error = err;
+            if (err != 0) {
+                msg.error = err;
+                receiveMessage(responder, &msg);
+                break;
+            }
             sendMessage(responder, &msg);
             break;
 
         case PING_NODE:
-            if (PingNode(conductor, msg.pid)) {
-                printf("OK: 1\n");
-            }
-            msg.error = err;
+            msg.error = PingNode(conductor, msg.pid);
             sendMessage(responder, &msg);
             break;
 
         case CMD_START || CMD_STOP || CMD_TIME:
+            err = CountTrace(conductor, &msg.trace, childID);
+            if (err != 0) {
+                msg.error = err;
+                receiveMessage(responder, &msg);
+                break;
+            }
+
+            reconnect_zmq_socket(requester, parentID + MIN_ADDR, parentAddr);
+            sendMessage(requester, &msg);
+            receiveMessage(requester, &msg);
+            
             sendMessage(responder, &msg);
         }
     }

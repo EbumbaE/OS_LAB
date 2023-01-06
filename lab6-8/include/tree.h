@@ -39,3 +39,5 @@ void indexCount(Node* tree, int indent);
 void printTree(Node* tree);
 
 int countSize(Node* root);
+
+int countTrace(Node *root, int id, int *trace, int i, int found);

@@ -1,5 +1,16 @@
 #include "../include/tree.h"
 
+int countTrace(Node *root, int id, int *trace, int i, int found) {
+    if (found == 1 || root == NULL) {
+        return found;
+    }
+    trace[i] = root->id;
+    if (root->id == id) {
+        return 1;
+    }
+    return countTrace(root->left, id, trace, i + 1, found) || countTrace(root->right, id, trace, i + 1, found);
+}
+
 int nodeExist(Node *root, int id) {
     if (root == NULL) {
         return 0;

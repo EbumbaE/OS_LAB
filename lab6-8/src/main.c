@@ -5,19 +5,19 @@ int main(){
     
     printMenu();
 
+    int id_orchestra = 0;
     int err;
-    err = OrchestraHandleRequest(0);
+    err = OrchestraHandleRequest(id_orchestra);
     if (err == 0) {
         printf("error to handle request %d", GetLastError());
     }
 
     printf("user id: %d\n", getpid());
 
-    void *context = zmq_ctx_new();
+    void *context = createZmqContext();
     void *requester = createZmqSocket(context, ZMQ_REQ);
-    char addr[MN] = SERVER_SOCKET_PATTERN;
-    int last_created = -1;
-    message msg = {0, 0, "", ""};
+    reconnectZmqSocket(requester, id_orchestra + MIN_ADDR, SERVER_SOCKET_PATTERN);
+    message msg;
     
     char command[20];
     int parentID, childID, t, id;

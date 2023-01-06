@@ -14,6 +14,7 @@ int main() {
     printf("2 - print tree\n");
     printf("3 - delete node\n");
     printf("4 - count size tree\n");
+    printf("5 - count trace\n");
     printf("0 - exit\n");
     
     printf("Do: ");
@@ -39,7 +40,21 @@ int main() {
         case 4:
             printf("%lld\n", countSize(tree));
             break;
-        default:
+        case 5:
+            printf("input id: ");
+            scanf("%d", &x);
+            int trace[100];
+            x = countTrace(tree, x, &trace, 0, 0);
+            if (x) {
+                x = 0;
+                while(trace[x] != 0) {
+                    printf("%d ", trace[x]);
+                    x++;
+                }
+                printf("\nsize: %d\n", x);
+            }
+            break;
+       default:
             break;
         }
         printf("Do: ");
