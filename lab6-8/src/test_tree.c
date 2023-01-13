@@ -1,8 +1,4 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-
-#include "../include/test_tree.h"
+﻿#include "../include/test_tree.h"
 
 int main() {
 
@@ -63,11 +59,4 @@ int main() {
     }
 
     deleteTree(tree);
-    
-    if (_CrtDumpMemoryLeaks())
-        printf("memory leak\n");
-    else
-        printf("all is ok\n");
-    
-    sleep(1);
 }

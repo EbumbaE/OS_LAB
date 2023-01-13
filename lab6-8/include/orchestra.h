@@ -1,15 +1,7 @@
 #pragma once
 
-#include <io.h>
-#include <fcntl.h>
-#include <process.h>
-#include <math.h>
-#include <tchar.h>
-#include <crtdbg.h>
 #include <sys/types.h>
-#include <conio.h>
 #include <malloc.h>
-#include <windows.h>
 
 #include "../include/tree.h"
 #include "../include/msg_q.h"
@@ -31,11 +23,11 @@ Conductor* NewConductor();
 void DeleteConductor(Conductor* conductor);
 int CountTrace(Conductor *conductor, int *trace, int childID);
 
-int AddParent(Conductor* conductor, int id);
+int AddParent(Conductor* conductor, int id, int *pid);
 int DeleteParent(Conductor* conductor, int id);
 int AmountParents(Conductor* conductor);
 
-int AddChild(Conductor* conductor, int parentID, int childID);
+int AddChild(Conductor* conductor, int parentID, int childID, int *pid);
 int DeleteChild(Conductor* conductor, int parentID, int childID);
 
 int PingNode(Conductor* conductor, int id);

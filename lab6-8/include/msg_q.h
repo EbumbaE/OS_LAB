@@ -15,7 +15,7 @@
 #define ERR_ZMQ_DISCONNECT     105
 #define ERR_ZMQ_MSG            106
 
-#define SERVER_SOCKET_PATTERN   "tcp://localhost:"
+#define SERVER_SOCKET_PATTERN   "tcp://127.0.0.1:"
 #define PING_SOCKET_PATTERN     "inproc://ping"
 #define MIN_ADDR                5555
 

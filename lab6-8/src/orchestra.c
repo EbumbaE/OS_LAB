@@ -30,7 +30,7 @@ int checkExist(Conductor* conductor, int id) {
     return 0;
 }
 
-int AddParent(Conductor* conductor, int id) {
+int AddParent(Conductor* conductor, int id, int *pid) {
     if (conductor->begin == NULL) {
         Parent* parent = (Parent*)malloc(sizeof(Parent));
         parent->id = id;
@@ -57,19 +57,7 @@ int AddParent(Conductor* conductor, int id) {
         conductor->size++;
     }
     
-    //
-    SECURITY_ATTRIBUTES saAttr; 
-    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
-    saAttr.bInheritHandle = TRUE; 
-    saAttr.lpSecurityDescriptor = NULL; 
-    HANDLE pipe[2];
-    DWORD dwWritten;
-    if (!CreatePipe(&pipe[0], &pipe[1], &saAttr, 0)){
-        return ErrorInCreatePipe;
-    }
-    WriteFile(pipe[1], &id, sizeof(id), &dwWritten, NULL);
-
-    int err = CreateChildProcess(TEXT("PARENT.exe"), pipe);
+    int err = CreateChildProcess("parent", id, pid);
     if (!err){
         return ErrorInCreateChildProccess;
     }
@@ -125,7 +113,7 @@ int AmountParents(Conductor* c) {
     return c->size;
 }
 
-int AddChild(Conductor* conductor, int parentID, int childID) {
+int AddChild(Conductor* conductor, int parentID, int childID, int *pid) {
     if (conductor->begin == NULL) {
         return ErrorNotFoundParent;
     }
@@ -137,21 +125,11 @@ int AddChild(Conductor* conductor, int parentID, int childID) {
                 return ErrorChildAlreadyExist;
             }
 
-            SECURITY_ATTRIBUTES saAttr; 
-            saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
-            saAttr.bInheritHandle = TRUE; 
-            saAttr.lpSecurityDescriptor = NULL; 
-            HANDLE pipe[2];
-            DWORD dwWritten;
-            if (!CreatePipe(&pipe[0], &pipe[1], &saAttr, 0)){
-                return ErrorInCreatePipe;
-            }
-            WriteFile(pipe[1], &childID, sizeof(childID), &dwWritten, NULL);
-
-            int err = CreateChildProcess(TEXT("CHILD.exe"), pipe);
+            int err = CreateChildProcess("child", childID, pid);
             if (!err){
                 return ErrorInCreateChildProccess;
             }
+
             pIter->root = insertNode(pIter->root, childID);
 
             break;
@@ -219,40 +197,33 @@ int CountTrace(Conductor *conductor, int *trace, int childID) {
     return ErrorNotFoundNode;
 }
 
-int CreateChildProcess(TCHAR *childName, HANDLE pipe[2]){
-    TCHAR *szCmdline = childName;
-    PROCESS_INFORMATION piProcInfo; 
-    STARTUPINFO siStartInfo;
-    BOOL bSuccess = FALSE; 
-
-    ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
-    ZeroMemory(&siStartInfo, sizeof(STARTUPINFO));
-    siStartInfo.cb = sizeof(STARTUPINFO); 
-    siStartInfo.hStdInput = pipe[0];
-    siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
-
-    bSuccess = CreateProcess(NULL, szCmdline, NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo); 
-
-    CloseHandle(piProcInfo.hProcess);
-    CloseHandle(piProcInfo.hThread);
-
-    return bSuccess;
+int CreateChildProcess(char *childName, int id, int *pid){
+    char argID[MN];
+    sprintf(argID, "%d", id);
+    char *args[] = {childName, argID, NULL}; 
+    *pid = fork();
+    if (pid == -1) {
+        return ErrorInCreateChildProccess;
+    }
+    if (pid == 0) {
+        execv(childName, args);
+        return 0;
+    }
+    return -1;
 }
 
-int main() {
-    DWORD dwRead, dwWrite;
-    HANDLE hStdin; 
-    hStdin = GetStdHandle(STD_INPUT_HANDLE);
-    if (hStdin == INVALID_HANDLE_VALUE){
-        printf("Error in get pipe in child");
-        return 1;
-    } 
+int main(int argc, char const *argv[]) {
 
-    int orchestraID;
-    ReadFile(hStdin, orchestraID, sizeof(orchestraID), &dwRead, NULL);
+    if (argc < 2) {
+        printf("error: amount argv\n");
+        return 1;
+    }
+    
+    int orchestraID = atoi(argv[1]);
 
     int pid = getpid();
-    
+    printf("orchestra [%d] has been created\n", pid);
+
     Conductor* conductor = NewConductor();
     
     void *context = createZmqContext();
@@ -280,7 +251,7 @@ int main() {
                 break;
             }
 
-            err = AddChild(conductor, msg.parentID, msg.childID);
+            err = AddChild(conductor, msg.parentID, msg.childID, &msg.pid);
             if (err != 0) {
                 msg.error = err;
                 sendMessage(responder, &msg);
@@ -304,13 +275,13 @@ int main() {
         case CREATE_PARENT:
             if (msg.parentID < 1) {
                 msg.error = ErrorParentAlreadyExist;
-                receiveMessage(responder, &msg);
+                sendMessage(responder, &msg);
                 break;
             }
 
-            err = AddParent(conductor, parentID);
-            msg.error = err;
-            receiveMessage(responder, &msg);
+            msg.error = AddParent(conductor, parentID, &msg.pid);
+
+            sendMessage(responder, &msg);
             break;
         
         case DELETE_CHILD:

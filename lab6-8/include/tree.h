@@ -5,13 +5,12 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <stdio.h>
-#include <windows.h>
 
 struct _tnode {
     int id;
     int height;
-    struct Node* left;
-    struct Node* right;
+    struct _tnode *left;
+    struct _tnode *right;
 };
 typedef struct _tnode Node;
 

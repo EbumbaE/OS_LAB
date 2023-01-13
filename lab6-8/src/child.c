@@ -1,16 +1,17 @@
 #include "../include/child.h"
 #include "../include/msg_q.h"
 
-int main() {
-    DWORD dwRead;
-    HANDLE hStdin; 
-    hStdin = GetStdHandle(STD_INPUT_HANDLE);
-    if (hStdin == INVALID_HANDLE_VALUE){
-        printf("Error in get pipe in child");
+int main(int argc, char const *argv[]) {
+
+    if (argc < 2) {
+        printf("error: amount argv\n");
         return 1;
-    } 
+    }
+    
     int id;
-    ReadFile(hStdin, id, sizeof(id), &dwRead, NULL);
+    id = atoi(argv[1]);
+
+    printf("child [%d] has been created\n", getpid());
 
     void *context = createZmqContext();
     void *responder = createZmqSocket(context, ZMQ_REP);

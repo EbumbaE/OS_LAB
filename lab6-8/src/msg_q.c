@@ -83,13 +83,13 @@ int receiveMessage(void* socket, message* msg) {
     if (zmq_msg_recv(&reply, socket, 0) == -1) {
         zmq_msg_close(&reply);
         fprintf(stderr, "[%d] ", getpid());
-        perror("ERROR zmq_msg_recv ");
+        perror("ERROR zmqMsgRecv ");
         exit(ERR_ZMQ_MSG);
     }
     (*msg) = *((message*)zmq_msg_data(&reply));
     if (zmq_msg_close(&reply) == -1) {
         fprintf(stderr, "[%d] ", getpid());
-        perror("ERROR zmq_msg_close ");
+        perror("ERROR zmqMsgClose ");
         exit(ERR_ZMQ_MSG);
     }
     return 1;

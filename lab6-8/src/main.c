@@ -3,28 +3,25 @@
 
 int main(){
     
+    printf("main [%d] has been created\n\n", getpid());
+
     printMenu();
 
-    int id_orchestra = 0;
-    int err;
+    int id_orchestra = 0, err;
     err = OrchestraHandleRequest(id_orchestra);
-    if (err == 0) {
-        printf("error to handle request %d", GetLastError());
-    }
-
-    printf("user id: %d\n", getpid());
+    errorHandle(err);
 
     void *context = createZmqContext();
     void *requester = createZmqSocket(context, ZMQ_REQ);
     char addr[MN] = SERVER_SOCKET_PATTERN;
     reconnectZmqSocket(requester, id_orchestra + MIN_ADDR, addr);
     message msg;
-    
+
     char command[20];
     int parentID, childID, t, id;
     while(1) {
-        printf("Do: ");
         scanf("%s", &command);
+        msg.error = 0;
 
         if (strcmp(&command, "exit") == 0) {
             msg.cmd = EXIT;
@@ -45,7 +42,7 @@ int main(){
                 
                 receiveMessage(requester, &msg);
                 if (msg.error == 0) {
-                    printf("OK: %d", msg.pid);
+                    printf("OK: [%d]\n", msg.pid);
                 } else {
                     errorHandle(msg.error);
                 }
@@ -61,7 +58,7 @@ int main(){
                 
                 receiveMessage(requester, &msg);
                 if (msg.error == 0) {
-                    printf("OK: %d", msg.pid);
+                    printf("OK: [%d]\n", msg.pid);
                 } else {
                     errorHandle(msg.error);
                 }
@@ -156,19 +153,12 @@ int main(){
 
         printf("Error in command\n");
     }
-    
-    if (_CrtDumpMemoryLeaks())
-        printf("memory leak\n");
-    else
-        printf("all is ok\n");
-    
     sleep(1);
 }
 
 void errorHandle(int error) {
     switch (error) {
         case 0:
-            printf("Ok: ");
             break;
 
         case ErrorNotFoundParent:
@@ -217,37 +207,15 @@ void printMenu() {
 }
 
 int OrchestraHandleRequest(int baseID) {
-    SECURITY_ATTRIBUTES saAttr; 
-    saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
-    saAttr.bInheritHandle = TRUE; 
-    saAttr.lpSecurityDescriptor = NULL; 
-    HANDLE pipe[2];
-    DWORD dwWritten;
-    if (!CreatePipe(&pipe[0], &pipe[1], &saAttr, 0)){
-        return ErrorInCreatePipe;
+    char argBaseID[MN];
+    sprintf(argBaseID, "%d", baseID);
+    char *args[] = {"orchestra", argBaseID, NULL}; 
+    int pid = fork();
+    if (pid == -1) {
+        return ErrorInCreateChildProccess;
     }
-    WriteFile(pipe[1], &baseID, sizeof(baseID), &dwWritten, NULL);
-
-    int err = CreateChildProcess(TEXT("ORCHESTRA.exe"), pipe);
-    return err;
-}
-
-int CreateChildProcess(TCHAR *childName, HANDLE pipe[2]){
-    TCHAR *szCmdline = childName;
-    PROCESS_INFORMATION piProcInfo; 
-    STARTUPINFO siStartInfo;
-    BOOL bSuccess = FALSE; 
-
-    ZeroMemory(&piProcInfo, sizeof(PROCESS_INFORMATION));
-    ZeroMemory(&siStartInfo, sizeof(STARTUPINFO));
-    siStartInfo.cb = sizeof(STARTUPINFO); 
-    siStartInfo.hStdInput = pipe[0];
-    siStartInfo.dwFlags |= STARTF_USESTDHANDLES;
-
-    bSuccess = CreateProcess(NULL, szCmdline, NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo); 
-
-    CloseHandle(piProcInfo.hProcess);
-    CloseHandle(piProcInfo.hThread);
-
-    return bSuccess;
+    if (pid == 0) {
+        return execv("orchestra", args);
+    }
+    return 0;
 }
