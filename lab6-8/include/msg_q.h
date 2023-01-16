@@ -24,14 +24,20 @@ typedef enum {
     CMD_STOP,
     CMD_TIME,
     CMD_EXIT,
-
+    
     CREATE_CHILD,
     CREATE_PARENT,
     DELETE_CHILD,
     DELETE_PARENT,
+
     PING_NODE,
+    
+    CHANGE_ROLE,
+
+    PRINT_ORCHESTRA,
     EXIT,
-    DONE
+    DONE,
+    NOTDONE
 } cmdType;
 
 typedef struct {

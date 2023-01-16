@@ -97,10 +97,10 @@ int main(){
 
         if (strcmp(command, "exec") == 0) {
             scanf("%d %s", &childID, &command);
+            msg.childID = childID;
             if (strcmp(&command, "start") == 0) {
                 
                 msg.cmd = CMD_START;
-                msg.childID = childID;
                 sendMessage(requester, &msg);
                 
                 receiveMessage(requester, &msg);
@@ -111,7 +111,6 @@ int main(){
             if (strcmp(&command, "stop") == 0) {
 
                 msg.cmd = CMD_STOP;
-                msg.childID = childID;
                 sendMessage(requester, &msg);
                 
                 receiveMessage(requester, &msg);
@@ -122,13 +121,12 @@ int main(){
             if (strcmp(&command, "time") == 0) {
 
                 msg.cmd = CMD_TIME;
-                msg.childID = childID;
                 sendMessage(requester, &msg);
                 
                 receiveMessage(requester, &msg);
                 errorHandle(msg.error);
 
-                if (msg.error == 0) {
+                if (msg.error == 0 && msg.cmd == DONE) {
                     printf("%d\n", msg.time);
                 } else {
                     errorHandle(msg.error);
@@ -148,6 +146,13 @@ int main(){
             receiveMessage(requester, &msg);
             errorHandle(msg.error);
             
+            continue;
+        }
+
+        if (strcmp(&command, "print") == 0) {
+            msg.cmd = PRINT_ORCHESTRA;
+            sendMessage(requester, &msg);
+            receiveMessage(requester, &msg);
             continue;
         }
 
@@ -187,6 +192,10 @@ void errorHandle(int error) {
 
         case ErrorNotFoundNode:
             printf("Error: Not Found Node\n");
+            break;
+
+        case ErrorIncorrectData:
+            printf("Error: Incorrect Data\n");
             break;
 
         default:

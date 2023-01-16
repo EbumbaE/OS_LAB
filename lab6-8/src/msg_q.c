@@ -1,12 +1,12 @@
 #include "../include/msg_q.h"
 
 void createAddr(char* addr, int id) {
-    char str[MN];
-    memset(str, 0, MN);
-    sprintf(str, "%d", id);
+    char strID[MN];
+    memset(strID, 0, MN);
+    sprintf(strID, "%d", id);
     memset(addr, 0, MN);
     memcpy(addr, SERVER_SOCKET_PATTERN, sizeof(SERVER_SOCKET_PATTERN));
-    strcat(addr, str);
+    strcat(addr, strID);
 }
 
 void* createZmqContext() {
