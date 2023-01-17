@@ -17,6 +17,10 @@ typedef struct _conductor {
     Parent* begin;
     Parent* end;
     int size;
+
+    void *responder;
+    void *requester;
+    char addr[MN];
 } Conductor;
 
 Conductor* NewConductor();
@@ -27,7 +31,7 @@ int AddParent(Conductor* conductor, int id, int *pid);
 int DeleteParent(Conductor* conductor, int id);
 int AmountParents(Conductor* conductor);
 
-int AddChild(Conductor* conductor, void *requester, char *addr, int parentID, int childID, int *pid);
+int AddChild(Conductor* conductor, int parentID, int childID, int *pid);
 int DeleteChild(Conductor* conductor, int parentID, int childID);
 
 int PingNode(Conductor* conductor, int id);

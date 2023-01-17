@@ -52,7 +52,6 @@ int main(int argc, char const *argv[]) {
             isParent = 1 - isParent;
             msg.error = 0;
             msg.cmd = DONE;
-            printf("me: [%d] is %d", getpid(), isParent);
             sendMessage(responder, &msg);
             continue;
         }
@@ -97,4 +96,7 @@ int main(int argc, char const *argv[]) {
         msg.cmd = NOTDONE;
         sendMessage(responder, &msg);
     }
+    closeZmqSocket(responder);
+    printf("[%d]: by by\n", getpid());
+    return 0;
 }

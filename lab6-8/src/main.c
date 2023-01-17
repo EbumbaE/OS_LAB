@@ -74,6 +74,7 @@ int main(){
                 
                 msg.cmd = DELETE_CHILD;
                 msg.childID = childID;
+                msg.parentID = parentID;
                 sendMessage(requester, &msg);
                 
                 receiveMessage(requester, &msg);

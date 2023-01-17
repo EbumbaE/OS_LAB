@@ -41,8 +41,7 @@ int main() {
             scanf("%d", &x);
             int trace[100];
             memset(trace, 0, 100);
-            x = countTrace(tree, x, &trace, 0, 0);
-            if (x) {
+            if (countTrace(tree, x, &trace)) {
                 x = 0;
                 while(trace[x] != 0) {
                     printf("%d ", trace[x]);

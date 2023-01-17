@@ -1,14 +1,28 @@
 #include "../include/tree.h"
 
-int countTrace(Node *root, int id, int *trace, int i, int found) {
-    if (found == 1 || root == NULL) {
-        return found;
+void recTrace(Node *root, int id, int *trace, int i, int *size) {
+    if (*size != 0 || root == NULL) {
+        return;
     }
     trace[i] = root->id;
     if (root->id == id) {
-        return 1;
+        *size = i + 1;
     }
-    return countTrace(root->left, id, trace, i + 1, found) || countTrace(root->right, id, trace, i + 1, found);
+    recTrace(root->left, id, trace, i + 1, size);
+    recTrace(root->right, id, trace, i + 1, size);
+}
+
+int countTrace(Node *root, int id, int *trace) {
+    int n = 0; 
+    recTrace(root, id, trace, 0, &n);
+    if (n == 0) {
+        return 0;
+    }
+    while (trace[n] != 0) {
+        trace[n] = 0;
+        n++;
+    }
+    return 1;
 }
 
 int nodeExist(Node *root, int id) {
@@ -104,20 +118,20 @@ int searchMin(Node* root) {
     return searchMin(root->left);
 }
 
-Node* deleteNode(Node* root, int id) {
+Node* unbalancedDeleteNode(Node* root, int id) {
     if (root == NULL)
         return root;
     if (id < root->id) {
-        root->left = deleteNode(root->left, id);
+        root->left = unbalancedDeleteNode(root->left, id);
         return root;
     }
     if (id > root->id) {
-        root->right = deleteNode(root->right, id);
+        root->right = unbalancedDeleteNode(root->right, id);
         return root;
     }
     if (root->left != NULL && root->right != NULL) {
         root->id = searchMin(root->right);
-        root->right = deleteNode(root->right, root->id);
+        root->right = unbalancedDeleteNode(root->right, root->id);
         return root;
     } 
     if (root->left != NULL) {
@@ -138,6 +152,10 @@ Node* deleteNode(Node* root, int id) {
     root = NULL;
     
     return root;
+}
+
+Node* deleteNode(Node* root, int id) {
+    return balance(unbalancedDeleteNode(root, id));
 }
 
 void deleteTree(Node* tree) {

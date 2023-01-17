@@ -5,7 +5,28 @@ Conductor* NewConductor(){
     conductor->size = 0;
     conductor->begin = NULL;
 
+    void *context = createZmqContext();
+    conductor->responder = createZmqSocket(context, ZMQ_REP);
+    conductor->requester = createZmqSocket(context, ZMQ_REQ);
+
+    memset(conductor->addr, '\0', MN);
+    strcat(conductor->addr, SERVER_SOCKET_PATTERN);
+
     return conductor;
+}
+
+int DeleteChildProcess(Conductor *conductor, Node *root) {
+    if (root == NULL) {
+        return 0;
+    }
+    DeleteChildProcess(conductor, root->left);
+    DeleteChildProcess(conductor, root->right);
+
+    message msg;
+    msg.cmd = DELETE_CHILD;
+    reconnectZmqSocket(conductor->requester, root->id + MIN_ADDR, conductor->addr);
+    sendMessage(conductor->requester, &msg);
+    receiveMessage(conductor->requester, &msg);
 }
 
 void DeleteConductor(Conductor* conductor) {
@@ -13,6 +34,7 @@ void DeleteConductor(Conductor* conductor) {
     while (conductor->begin != NULL) {
         p = conductor->begin;
         conductor->begin = conductor->begin->next;
+        DeleteChildProcess(conductor, p->root);
         deleteTree(p->root);
         free(p);
     }
@@ -63,8 +85,13 @@ int AddParent(Conductor* conductor, int id, int *pid) {
     return err;
 }
 
-int DeleteChildProcess(Node *root) {
-    //TODO
+void ChangeRole(void *requester, char *addr, int toID) {
+    message msg;
+    memset(msg.trace, 0, 100);
+    msg.cmd = CHANGE_ROLE;
+    reconnectZmqSocket(requester, toID + MIN_ADDR, addr);
+    sendMessage(requester, &msg);
+    receiveMessage(requester, &msg);
 }
 
 int DeleteParent(Conductor* conductor, int id) {
@@ -73,6 +100,7 @@ int DeleteParent(Conductor* conductor, int id) {
     } 
 
     if (conductor->size == 1 && conductor->begin->id == id) {
+        DeleteChildProcess(conductor, conductor->begin->root);
         deleteTree(conductor->begin->root);
         free(conductor->begin);
         conductor = NewConductor();
@@ -90,9 +118,8 @@ int DeleteParent(Conductor* conductor, int id) {
 
     while (pIter != NULL) {
         Parent *prev = pIter->prev, *next = pIter->next;
-        if (pIter->id == id) {
-            DeleteChildProcess(pIter->root);
-
+        if (pIter->id == id) {         
+            DeleteChildProcess(conductor, pIter->root);
             if (prev != NULL) { 
                 pIter->prev->next = next;
             } else {
@@ -119,7 +146,7 @@ int AmountParents(Conductor* c) {
     return c->size;
 }
 
-int AddChild(Conductor* conductor, void* requester, char *addr, int parentID, int childID, int *pid) {
+int AddChild(Conductor* conductor, int parentID, int childID, int *pid) {
     if (conductor->begin == NULL) {
         return ErrorNotFoundParent;
     }
@@ -151,23 +178,14 @@ int AddChild(Conductor* conductor, void* requester, char *addr, int parentID, in
     }
 
     if (parentIter->root->id != parentIter->id) {
-        printf("rebalance %d and %d \n", parentIter->root->id, parentIter->id);
+        printf("new root is [%d]  past root: %d \n", parentIter->root->id, parentIter->id);
         message msg;
         int toParent = parentIter->root->id;
         int toChild =  parentIter->id;
         parentIter->id = parentIter->root->id;
         
-        memset(msg.trace, 0, 100);
-        msg.cmd = CHANGE_ROLE;
-        reconnectZmqSocket(requester, toParent + MIN_ADDR, addr);
-        sendMessage(requester, &msg);
-        receiveMessage(requester, &msg);
-        
-        memset(msg.trace, 0, 100);
-        msg.cmd = CHANGE_ROLE;
-        reconnectZmqSocket(requester, toChild + MIN_ADDR, addr);
-        sendMessage(requester, &msg);
-        receiveMessage(requester, &msg);
+        ChangeRole(conductor->requester, conductor->addr, toParent);
+        ChangeRole(conductor->requester, conductor->addr, toChild);
     }
 
     return err;
@@ -185,6 +203,14 @@ int DeleteChild(Conductor* conductor, int parentID, int childID) {
                 return ErrorNotFoundChild;
             }
             pIter->root = deleteNode(pIter->root, childID);
+            if (pIter->id != pIter->root->id) {
+                printf("new root is [%d]  past root: %d \n", pIter->root->id, pIter->id);
+                int toParent = pIter->id;
+                int toChild = pIter->root->id;
+                pIter->id = pIter->root->id;
+                ChangeRole(conductor->requester, conductor->addr, toChild);
+                ChangeRole(conductor->requester, conductor->addr, toParent);
+            }
             break;
         } 
         pIter = pIter->next;
@@ -218,7 +244,7 @@ int CountTrace(Conductor *conductor, int *trace, int childID) {
     while (pIter != NULL) {
         if (nodeExist(pIter->root, childID)) {
             memset(trace, 0, 100);
-            countTrace(pIter->root, childID, trace, 0, 0);
+            countTrace(pIter->root, childID, trace);
             return 0;
         }
         pIter = pIter->next;
@@ -251,6 +277,17 @@ void PrintOrchestra(Conductor *conductor) {
     }
 }
 
+int popFirstID(int *trace) {
+    int fID = trace[0];
+    int i = 0;
+    while (trace[i] != 0) {
+        trace[i] = trace[i + 1];
+        i++;
+    }
+    trace[i - 1] = 0;
+    return fID;
+}
+
 int main(int argc, char const *argv[]) {
 
     if (argc < 2) {
@@ -265,87 +302,77 @@ int main(int argc, char const *argv[]) {
 
     Conductor* conductor = NewConductor();
     
-    void *context = createZmqContext();
-    void *responder = createZmqSocket(context, ZMQ_REP);
-    void *requester = createZmqSocket(context, ZMQ_REQ);
-    
     char orchestraAddr[30] = SERVER_SOCKET_PATTERN;
     createAddr(&orchestraAddr, orchestraID + MIN_ADDR);
-    bindZmqSocket(responder, orchestraAddr);
-
-    char parentAddr[30] = SERVER_SOCKET_PATTERN;    
+    bindZmqSocket(conductor->responder, orchestraAddr);
 
     message msg = {cmd: -1};
     char *command;
-    int err;
+    int err, toParentID;
     while (msg.cmd != CMD_EXIT) {
-        receiveMessage(responder, &msg);
+        receiveMessage(conductor->responder, &msg);
 
         switch (msg.cmd) {
         case CREATE_CHILD:
             if (msg.childID < 1 || msg.parentID < 1) {
                 msg.error = ErrorIncorrectData;
-                sendMessage(responder, &msg);
+                sendMessage(conductor->responder, &msg);
                 break;
             }
 
-            err = AddChild(conductor, requester, &parentAddr, msg.parentID, msg.childID, &(msg.pid));
+            err = AddChild(conductor, msg.parentID, msg.childID, &(msg.pid));
             if (err != 0) {
                 msg.error = err;
-                sendMessage(responder, &msg);
+                sendMessage(conductor->responder, &msg);
                 break;
             }
 
-            sendMessage(responder, &msg);
+            sendMessage(conductor->responder, &msg);
             break;
 
         case CREATE_PARENT:
             if (msg.parentID < 1) {
-                msg.error = ErrorParentAlreadyExist;
-                sendMessage(responder, &msg);
+                msg.error = ErrorIncorrectData;
+                sendMessage(conductor->responder, &msg);
                 break;
             }
 
             msg.error = AddParent(conductor, msg.parentID, &msg.pid);
 
-            sendMessage(responder, &msg);
+            sendMessage(conductor->responder, &msg);
             break;
         
         case DELETE_CHILD:
             err = CountTrace(conductor, &(msg.trace), msg.childID);
             if (err != 0) {
                 msg.error = err;
-                sendMessage(responder, &msg);
+                sendMessage(conductor->responder, &msg);
                 break;
             }
 
-            err = DeleteChild(conductor, msg.parentID, msg.childID);
-            if (err != 0) {
-                msg.error = err;
-                sendMessage(responder, &msg);
-                break;
-            }
+            toParentID = popFirstID(&(msg.trace));
 
-            reconnectZmqSocket(requester, msg.parentID + MIN_ADDR, parentAddr);
-            sendMessage(requester, &msg);
-            receiveMessage(requester, &msg);
+            reconnectZmqSocket(conductor->requester, toParentID + MIN_ADDR, conductor->addr);
+            sendMessage(conductor->requester, &msg);
+            receiveMessage(conductor->requester, &msg);
             
-            sendMessage(responder, &msg);
+            msg.error = DeleteChild(conductor, msg.parentID, msg.childID);
+            sendMessage(conductor->responder, &msg);
             break;
 
         case DELETE_PARENT:
             err = DeleteParent(conductor, msg.parentID);                
             if (err != 0) {
                 msg.error = err;
-                sendMessage(responder, &msg);
+                sendMessage(conductor->responder, &msg);
                 break;
             }
-            sendMessage(responder, &msg);
+            sendMessage(conductor->responder, &msg);
             break;
 
         case PING_NODE:
             msg.error = PingNode(conductor, msg.pid);
-            sendMessage(responder, &msg);
+            sendMessage(conductor->responder, &msg);
             break;
 
         case CMD_START: 
@@ -354,29 +381,23 @@ int main(int argc, char const *argv[]) {
             err = CountTrace(conductor, &(msg.trace), msg.childID);
             if (err != 0) {
                 msg.error = err;
-                sendMessage(responder, &msg);
+                sendMessage(conductor->responder, &msg);
                 break;
             }
 
-            int toParentID = msg.trace[0];
-            int i = 0;
-            while (msg.trace[i] != 0) {
-                msg.trace[i] = msg.trace[i + 1];
-                i++;
-            }
-            msg.trace[i - 1] = 0;
+            toParentID = popFirstID(&(msg.trace));
 
-            reconnectZmqSocket(requester, toParentID + MIN_ADDR, parentAddr);
-            sendMessage(requester, &msg);
-            receiveMessage(requester, &msg);
+            reconnectZmqSocket(conductor->requester, toParentID + MIN_ADDR, conductor->addr);
+            sendMessage(conductor->requester, &msg);
+            receiveMessage(conductor->requester, &msg);
             
-            sendMessage(responder, &msg);
+            sendMessage(conductor->responder, &msg);
             break;
 
         case PRINT_ORCHESTRA:
             PrintOrchestra(conductor);
             msg.cmd = DONE;
-            sendMessage(responder, &msg);
+            sendMessage(conductor->responder, &msg);
             break;
         }
     }
