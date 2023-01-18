@@ -115,7 +115,7 @@ int sendMessage(void* socket, message* msg) {
     return 1;
 }
 
-int pingProcess(int id) {
+int pingProcess(int id, int *pid) {
     char addr_monitor[30];
     char addr_connection[30];
     char strID[30];
@@ -142,13 +142,24 @@ int pingProcess(int id) {
     uint8_t* data = (uint8_t*)zmq_msg_data(&msg);
     uint16_t event = *(uint16_t*)(data);
 
+    
+    int answer = event != ZMQ_EVENT_CONNECT_RETRIED;
+    
+    if (answer == 1) {
+        message msg;
+        msg.cmd = PING_NODE;
+        msg.trace[0] = 0;
+        sendMessage(requester, &msg);
+        receiveMessage(requester, &msg);
+        if (msg.error != 0) {
+            return msg.error;
+        }
+        *pid = msg.pid;
+    } 
+
     zmq_close(requester);
     zmq_close(socket);
     zmq_msg_close(&msg);
     zmq_ctx_destroy(context);
-    if (event == ZMQ_EVENT_CONNECT_RETRIED) {
-        return 0;
-    } else {
-        return 1;
-    }
+    return answer;
 }

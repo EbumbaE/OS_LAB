@@ -15,18 +15,34 @@ Conductor* NewConductor(){
     return conductor;
 }
 
-int DeleteChildProcess(Conductor *conductor, Node *root) {
+int recDeleteChildProcess(Conductor *conductor, Node *root, int *trace, int n) {
     if (root == NULL) {
         return 0;
     }
-    DeleteChildProcess(conductor, root->left);
-    DeleteChildProcess(conductor, root->right);
+    trace[n] = root->id;
+    
+    recDeleteChildProcess(conductor, root->left, trace, n + 1);
+    recDeleteChildProcess(conductor, root->right, trace, n + 1);
 
     message msg;
     msg.cmd = DELETE_CHILD;
-    reconnectZmqSocket(conductor->requester, root->id + MIN_ADDR, conductor->addr);
+    memcpy(msg.trace, trace, 100);
+    
+    int toID = popFirstID(&(msg.trace));
+
+    reconnectZmqSocket(conductor->requester, toID + MIN_ADDR, conductor->addr);
     sendMessage(conductor->requester, &msg);
     receiveMessage(conductor->requester, &msg);
+    
+    trace[n] = 0;
+    return 0;
+}
+
+int DeleteChildProcesses(Conductor *conductor, Node *root) {
+    int trace[100];
+    memset(trace, 0, 100);
+    recDeleteChildProcess(conductor, root, &trace, 0);
+    return 0;
 }
 
 void DeleteConductor(Conductor* conductor) {
@@ -34,7 +50,7 @@ void DeleteConductor(Conductor* conductor) {
     while (conductor->begin != NULL) {
         p = conductor->begin;
         conductor->begin = conductor->begin->next;
-        DeleteChildProcess(conductor, p->root);
+        DeleteChildProcesses(conductor, p->root);
         deleteTree(p->root);
         free(p);
     }
@@ -96,18 +112,18 @@ void ChangeRole(void *requester, char *addr, int toID) {
 
 int DeleteParent(Conductor* conductor, int id) {
     if (conductor->begin == NULL) {
-        return 0;
+        return ErrorNotFoundParent;
     } 
 
-    if (conductor->size == 1 && conductor->begin->id == id) {
-        DeleteChildProcess(conductor, conductor->begin->root);
-        deleteTree(conductor->begin->root);
-        free(conductor->begin);
-        conductor = NewConductor();
+    Parent* pIter = conductor->begin;
+    if (conductor->size == 1 && pIter->id == id) {
+        DeleteChildProcesses(conductor, pIter->root);
+        deleteTree(pIter->root);
+        conductor->begin = conductor->end = NULL; 
+        free(pIter);
         return 0;
     }
 
-    Parent* pIter = conductor->begin;
     while (pIter != NULL && pIter->id != id) {
         pIter = pIter->next;
     }
@@ -116,28 +132,24 @@ int DeleteParent(Conductor* conductor, int id) {
         return ErrorNotFoundParent;
     }
 
-    while (pIter != NULL) {
-        Parent *prev = pIter->prev, *next = pIter->next;
-        if (pIter->id == id) {         
-            DeleteChildProcess(conductor, pIter->root);
-            if (prev != NULL) { 
-                pIter->prev->next = next;
-            } else {
-                conductor->begin = next;
-                conductor->begin->prev = NULL;
-            }
-            if (next != NULL) {
-                pIter->next->prev = prev;
-            } else {
-                conductor->end = prev;
-                conductor->end->next = NULL;
-            }
-            deleteTree(pIter->root);
-            free(pIter);
-            break;
-        }
+    if (pIter != NULL) {
+        DeleteChildProcesses(conductor, pIter->root);
+        deleteTree(pIter->root);
 
-        pIter = next;
+        Parent *prev = pIter->prev, *next = pIter->next;
+        if (prev != NULL) { 
+            pIter->prev->next = next;
+        } else {
+            conductor->begin = next;
+            conductor->begin->prev = NULL;
+        }
+        if (next != NULL) {
+            pIter->next->prev = prev;
+        } else {
+            conductor->end = prev;
+            conductor->end->next = NULL;
+        }
+        free(pIter);
     }
     return 0;
 }
@@ -209,7 +221,9 @@ int DeleteChild(Conductor* conductor, int parentID, int childID) {
                 int toChild = pIter->root->id;
                 pIter->id = pIter->root->id;
                 ChangeRole(conductor->requester, conductor->addr, toChild);
-                ChangeRole(conductor->requester, conductor->addr, toParent);
+                if (toParent != parentID) {
+                    ChangeRole(conductor->requester, conductor->addr, toParent);
+                }
             }
             break;
         } 
@@ -223,19 +237,22 @@ int DeleteChild(Conductor* conductor, int parentID, int childID) {
     return 0;
 }
 
-int PingNode(Conductor* conductor, int id) {
+int PingNode(Conductor* conductor, int id, int *pid) {
     if (conductor->begin == NULL) {
-        return 0;
+        return ErrorNotFoundNode;
     }
 
     Parent *pIter = conductor->begin;
     while (pIter != NULL) {
         if (pIter->id == id || nodeExist(pIter->root, id)) {
-            return pingProcess(id + MIN_ADDR);
+            if (pingProcess(id + MIN_ADDR, pid)) {
+                return 0;
+            } else {
+                return 10001;
+            }
         }
         pIter = pIter->next;
     }
- 
     return ErrorNotFoundNode;
 }
 
@@ -284,7 +301,6 @@ int popFirstID(int *trace) {
         trace[i] = trace[i + 1];
         i++;
     }
-    trace[i - 1] = 0;
     return fID;
 }
 
@@ -371,7 +387,18 @@ int main(int argc, char const *argv[]) {
             break;
 
         case PING_NODE:
-            msg.error = PingNode(conductor, msg.pid);
+            if (msg.pid < 0) {
+                msg.error = ErrorIncorrectData;
+                sendMessage(conductor->responder, &msg);
+                break;
+            }
+            if (msg.pid == 0) {
+                msg.error = 0;
+                msg.pid = getpid();
+                sendMessage(conductor->responder, &msg);
+                break;
+            }
+            msg.error = PingNode(conductor, msg.pid, &(msg.pid));
             sendMessage(conductor->responder, &msg);
             break;
 
@@ -396,7 +423,7 @@ int main(int argc, char const *argv[]) {
 
         case PRINT_ORCHESTRA:
             PrintOrchestra(conductor);
-            msg.cmd = DONE;
+            msg.error = 0;
             sendMessage(conductor->responder, &msg);
             break;
         }

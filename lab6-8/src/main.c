@@ -7,9 +7,9 @@ int main(){
 
     printMenu();
 
-    int id_orchestra = 0, err;
-    err = OrchestraHandleRequest(id_orchestra);
-    errorHandle(err);
+    int id_orchestra = 0, err, pid;
+    err = OrchestraHandleRequest(id_orchestra, &pid);
+    errorHandle(err, pid);
 
     void *context = createZmqContext();
     void *requester = createZmqSocket(context, ZMQ_REQ);
@@ -41,11 +41,7 @@ int main(){
                 sendMessage(requester, &msg);
                 
                 receiveMessage(requester, &msg);
-                if (msg.error == 0) {
-                    printf("OK: [%d]\n", msg.pid);
-                } else {
-                    errorHandle(msg.error);
-                }
+                errorHandle(msg.error, msg.pid);
 
                 continue;
             } 
@@ -57,11 +53,7 @@ int main(){
                 sendMessage(requester, &msg);
                 
                 receiveMessage(requester, &msg);
-                if (msg.error == 0) {
-                    printf("OK: [%d]\n", msg.pid);
-                } else {
-                    errorHandle(msg.error);
-                }
+                errorHandle(msg.error, msg.pid);
 
                 continue;
             }  
@@ -78,7 +70,7 @@ int main(){
                 sendMessage(requester, &msg);
                 
                 receiveMessage(requester, &msg);
-                errorHandle(msg.error);
+                errorHandle(msg.error, msg.pid);
 
                 continue;
             } 
@@ -90,7 +82,7 @@ int main(){
                 sendMessage(requester, &msg);
                 
                 receiveMessage(requester, &msg);
-                errorHandle(msg.error);
+                errorHandle(msg.error, msg.pid);
 
                 continue;
             }
@@ -105,7 +97,7 @@ int main(){
                 sendMessage(requester, &msg);
                 
                 receiveMessage(requester, &msg);
-                errorHandle(msg.error);
+                errorHandle(msg.error, msg.pid);
 
                 continue;
             } 
@@ -115,7 +107,7 @@ int main(){
                 sendMessage(requester, &msg);
                 
                 receiveMessage(requester, &msg);
-                errorHandle(msg.error);
+                errorHandle(msg.error, msg.pid);
 
                 continue;
             } 
@@ -125,12 +117,12 @@ int main(){
                 sendMessage(requester, &msg);
                 
                 receiveMessage(requester, &msg);
-                errorHandle(msg.error);
+                errorHandle(msg.error, msg.pid);
 
-                if (msg.error == 0 && msg.cmd == DONE) {
+                if (msg.error == 0) {
                     printf("%d\n", msg.time);
                 } else {
-                    errorHandle(msg.error);
+                    errorHandle(msg.error, msg.pid);
                 }
 
                 continue;
@@ -143,10 +135,8 @@ int main(){
             msg.cmd = PING_NODE;
             msg.pid = id;
             sendMessage(requester, &msg);
-            
             receiveMessage(requester, &msg);
-            errorHandle(msg.error);
-            
+            errorHandle(msg.error, msg.pid);
             continue;
         }
 
@@ -162,45 +152,42 @@ int main(){
     sleep(1);
 }
 
-void errorHandle(int error) {
+void errorHandle(int error, int pid) {
     switch (error) {
         case 0:
+            printf("OK [%d]\n", pid);
             break;
 
         case ErrorNotFoundParent:
-            printf("Error: Parent not found\n");
+            printf("Error [%d]: Parent not found\n", pid);
             break;
     
         case ErrorParentAlreadyExist:
-            printf("Error: Parent Already exists\n");
+            printf("Error [%d]: Parent Already exists\n", pid);
             break;
     
         case ErrorNotFoundChild:
-            printf("Error: Child not found\n");
+            printf("Error [%d]: Child not found\n", pid);
             break;
     
         case ErrorChildAlreadyExist:
-            printf("Error: Child Already exists\n");
+            printf("Error [%d]: Child Already exists\n", pid);
             break;
     
         case ErrorInCreateChildProccess:
-            printf("Error: Create Child Proccess\n");
-            break;
-
-        case ErrorInCreatePipe:
-            printf("Error: Create Pipe\n");
+            printf("Error [%d]: Create Child Proccess\n", pid);
             break;
 
         case ErrorNotFoundNode:
-            printf("Error: Not Found Node\n");
+            printf("Error [%d]: Not Found Node\n", pid);
             break;
 
         case ErrorIncorrectData:
-            printf("Error: Incorrect Data\n");
+            printf("Error [%d]: Incorrect Data\n", pid);
             break;
 
         default:
-            printf("Error: %d\n", error);
+            printf("Error %d: [%d] Not done\n", error, pid);
             break;
     }
 }
@@ -216,15 +203,15 @@ void printMenu() {
     printf("7) exit\n");
 }
 
-int OrchestraHandleRequest(int baseID) {
+int OrchestraHandleRequest(int baseID, int *pid) {
     char argBaseID[MN];
     sprintf(argBaseID, "%d", baseID);
     char *args[] = {"orchestra", argBaseID, NULL}; 
-    int pid = fork();
-    if (pid == -1) {
+    *pid = fork();
+    if (*pid == -1) {
         return ErrorInCreateChildProccess;
     }
-    if (pid == 0) {
+    if (*pid == 0) {
         return execv("orchestra", args);
     }
     return 0;

@@ -35,9 +35,7 @@ typedef enum {
     CHANGE_ROLE,
 
     PRINT_ORCHESTRA,
-    EXIT,
-    DONE,
-    NOTDONE
+    EXIT
 } cmdType;
 
 typedef struct {
@@ -63,4 +61,4 @@ void  deleteZmqContext(void* context);
 
 int receiveMessage(void* socket, message* msg);
 int sendMessage(void* socket, message* msg);
-int pingProcess(int id);
+int pingProcess(int id, int *pid);

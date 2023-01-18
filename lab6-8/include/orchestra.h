@@ -34,7 +34,7 @@ int AmountParents(Conductor* conductor);
 int AddChild(Conductor* conductor, int parentID, int childID, int *pid);
 int DeleteChild(Conductor* conductor, int parentID, int childID);
 
-int PingNode(Conductor* conductor, int id);
+int PingNode(Conductor* conductor, int id, int *pid);
 
 void PrintOrchestra(Conductor *conductor);
 
@@ -43,6 +43,6 @@ void PrintOrchestra(Conductor *conductor);
 #define ErrorNotFoundChild          3
 #define ErrorChildAlreadyExist      4
 #define ErrorInCreateChildProccess  5
-#define ErrorInCreatePipe           6
-#define ErrorNotFoundNode           7
-#define ErrorIncorrectData          8
+#define ErrorNotFoundNode           6
+#define ErrorIncorrectData          7
+#define ErrorNotDone                8

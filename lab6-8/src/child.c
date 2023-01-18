@@ -28,7 +28,7 @@ int main(int argc, char const *argv[]) {
     
     while(1) {
         receiveMessage(responder, &msg);
-        
+
         if (msg.trace[0] != 0) {
             int to = msg.trace[0];
             
@@ -37,7 +37,6 @@ int main(int argc, char const *argv[]) {
                 msg.trace[i] = msg.trace[i + 1];
                 i++;
             }
-            msg.trace[i - 1] = 0;
             
             char addr[MN] = SERVER_SOCKET_PATTERN;
             reconnectZmqSocket(requester, to + MIN_ADDR, addr);
@@ -51,14 +50,14 @@ int main(int argc, char const *argv[]) {
         if (msg.cmd == CHANGE_ROLE) {
             isParent = 1 - isParent;
             msg.error = 0;
-            msg.cmd = DONE;
+            msg.pid = getpid();
             sendMessage(responder, &msg);
             continue;
         }
 
         if (msg.cmd == DELETE_CHILD || msg.cmd == DELETE_PARENT) {
             msg.error = 0;
-            msg.cmd = DONE;
+            msg.pid = getpid();
             sendMessage(responder, &msg);
             break;
         }
@@ -66,7 +65,7 @@ int main(int argc, char const *argv[]) {
         if (msg.cmd == CMD_START && !isParent) {
             start = clock();
             stop = -1;
-            msg.cmd = DONE;
+            msg.pid = getpid();
             sendMessage(responder, &msg);
             continue;
         }
@@ -78,7 +77,14 @@ int main(int argc, char const *argv[]) {
             }
             start = -1;
             stop = -1;
-            msg.cmd = DONE;
+            msg.pid = getpid();
+            sendMessage(responder, &msg);
+            continue;
+        }
+
+        if (msg.cmd == PING_NODE) {
+            msg.error = 0;
+            msg.pid = getpid();
             sendMessage(responder, &msg);
             continue;
         }
@@ -89,11 +95,11 @@ int main(int argc, char const *argv[]) {
             } else {
                 msg.time = timer;
             }
-            msg.cmd = DONE;
+            msg.pid = getpid();
             sendMessage(responder, &msg);
             continue;
         }
-        msg.cmd = NOTDONE;
+        msg.error = 10001;
         sendMessage(responder, &msg);
     }
     closeZmqSocket(responder);
