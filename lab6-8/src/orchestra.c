@@ -23,7 +23,7 @@ int recDeleteChildProcess(Conductor *conductor, Node *root, int *trace, int n) {
     
     recDeleteChildProcess(conductor, root->left, trace, n + 1);
     recDeleteChildProcess(conductor, root->right, trace, n + 1);
-
+    
     message msg;
     msg.cmd = DELETE_CHILD;
     memcpy(msg.trace, trace, 100);
@@ -33,7 +33,12 @@ int recDeleteChildProcess(Conductor *conductor, Node *root, int *trace, int n) {
     reconnectZmqSocket(conductor->requester, toID + MIN_ADDR, conductor->addr);
     sendMessage(conductor->requester, &msg);
     receiveMessage(conductor->requester, &msg);
-    
+    if (msg.error == 0) {
+        printf("[%d] remove\n", msg.pid);
+    } else {
+        printf("error %d\n", msg.error);
+    }
+
     trace[n] = 0;
     return 0;
 }
@@ -104,6 +109,7 @@ int AddParent(Conductor* conductor, int id, int *pid) {
 void ChangeRole(void *requester, char *addr, int toID) {
     message msg;
     memset(msg.trace, 0, 100);
+    msg.error = 0;
     msg.cmd = CHANGE_ROLE;
     reconnectZmqSocket(requester, toID + MIN_ADDR, addr);
     sendMessage(requester, &msg);
@@ -192,6 +198,7 @@ int AddChild(Conductor* conductor, int parentID, int childID, int *pid) {
     if (parentIter->root->id != parentIter->id) {
         printf("new root is [%d]  past root: %d \n", parentIter->root->id, parentIter->id);
         message msg;
+        msg.error = 0;
         int toParent = parentIter->root->id;
         int toChild =  parentIter->id;
         parentIter->id = parentIter->root->id;
@@ -325,7 +332,8 @@ int main(int argc, char const *argv[]) {
     message msg = {cmd: -1};
     char *command;
     int err, toParentID;
-    while (msg.cmd != CMD_EXIT) {
+    int bExit = 0;
+    while (!bExit) {
         receiveMessage(conductor->responder, &msg);
 
         switch (msg.cmd) {
@@ -354,7 +362,6 @@ int main(int argc, char const *argv[]) {
             }
 
             msg.error = AddParent(conductor, msg.parentID, &msg.pid);
-
             sendMessage(conductor->responder, &msg);
             break;
         
@@ -377,12 +384,7 @@ int main(int argc, char const *argv[]) {
             break;
 
         case DELETE_PARENT:
-            err = DeleteParent(conductor, msg.parentID);                
-            if (err != 0) {
-                msg.error = err;
-                sendMessage(conductor->responder, &msg);
-                break;
-            }
+            msg.error = DeleteParent(conductor, msg.parentID);                
             sendMessage(conductor->responder, &msg);
             break;
 
@@ -426,8 +428,13 @@ int main(int argc, char const *argv[]) {
             msg.error = 0;
             sendMessage(conductor->responder, &msg);
             break;
+        case EXIT: 
+            msg.error = 0;
+            sendMessage(conductor->responder, &msg);
+            bExit = 1;
+            break;
         }
     }
-
     DeleteConductor(conductor);
+    printf("[%d]: by by\n", getpid());
 }

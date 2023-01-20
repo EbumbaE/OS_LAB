@@ -18,17 +18,18 @@ int main(int argc, char const *argv[]) {
     void *responder = createZmqSocket(context, ZMQ_REP);
     void *requester = createZmqSocket(context, ZMQ_REQ);
     char childAddr[30] = SERVER_SOCKET_PATTERN;
+    char addr[MN] = SERVER_SOCKET_PATTERN;
     
     createAddr(&childAddr, id + MIN_ADDR);
     bindZmqSocket(responder, childAddr);
-
+    
     clock_t start = -1, stop = -1, timer = 0;
 
     message msg;
     
     while(1) {
         receiveMessage(responder, &msg);
-
+    
         if (msg.trace[0] != 0) {
             int to = msg.trace[0];
             
@@ -38,7 +39,6 @@ int main(int argc, char const *argv[]) {
                 i++;
             }
             
-            char addr[MN] = SERVER_SOCKET_PATTERN;
             reconnectZmqSocket(requester, to + MIN_ADDR, addr);
             sendMessage(requester, &msg);
             receiveMessage(requester, &msg);
@@ -89,14 +89,16 @@ int main(int argc, char const *argv[]) {
             continue;
         }
 
-        if (msg.cmd == CMD_TIME && !isParent) {
-            if (start != -1 && stop == -1) {
-                msg.time =  timer + clock() - start;
-            } else {
-                msg.time = timer;
+        if (msg.cmd == CMD_TIME) {
+            if (!isParent) {
+                if (start != -1 && stop == -1) {
+                    msg.time =  timer + clock() - start;
+                } else {
+                    msg.time = timer;
+                }
+                msg.pid = getpid();
+                sendMessage(responder, &msg);
             }
-            msg.pid = getpid();
-            sendMessage(responder, &msg);
             continue;
         }
         msg.error = 10001;
