@@ -33,11 +33,6 @@ int recDeleteChildProcess(Conductor *conductor, Node *root, int *trace, int n) {
     reconnectZmqSocket(conductor->requester, toID + MIN_ADDR, conductor->addr);
     sendMessage(conductor->requester, &msg);
     receiveMessage(conductor->requester, &msg);
-    if (msg.error == 0) {
-        printf("[%d] remove\n", msg.pid);
-    } else {
-        printf("error %d\n", msg.error);
-    }
 
     trace[n] = 0;
     return 0;
