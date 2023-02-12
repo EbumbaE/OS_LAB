@@ -17,7 +17,7 @@ int main(int argc, char const *argv[]) {
     void *context = createZmqContext();
     void *responder = createZmqSocket(context, ZMQ_REP);
     void *requester = createZmqSocket(context, ZMQ_REQ);
-    char childAddr[30] = SERVER_SOCKET_PATTERN;
+    char childAddr[MN] = SERVER_SOCKET_PATTERN;
     char addr[MN] = SERVER_SOCKET_PATTERN;
     
     createAddr(&childAddr, id + MIN_ADDR);
@@ -90,6 +90,7 @@ int main(int argc, char const *argv[]) {
         }
 
         if (msg.cmd == CMD_TIME) {
+            msg.time = 0;
             if (!isParent) {
                 if (start != -1 && stop == -1) {
                     msg.time =  timer + clock() - start;
@@ -97,14 +98,20 @@ int main(int argc, char const *argv[]) {
                     msg.time = timer;
                 }
                 msg.pid = getpid();
-                sendMessage(responder, &msg);
             }
+            sendMessage(responder, &msg);
             continue;
         }
         msg.error = 10001;
         sendMessage(responder, &msg);
     }
+
     closeZmqSocket(responder);
-    printf("[%d]: by by\n", getpid());
+    if (isParent) {
+        printf("parent[%d]: by by\n", getpid());
+    } else {
+        printf("child[%d]: by by\n", getpid());
+    }
+    
     return 0;
 }

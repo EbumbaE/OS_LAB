@@ -149,6 +149,7 @@ int main(){
 
         printf("Error in command\n");
     }
+    printf("main[%d]: by by\n", getpid());
     sleep(1);
 }
 

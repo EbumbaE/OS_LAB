@@ -20,13 +20,14 @@ int recDeleteChildProcess(Conductor *conductor, Node *root, int *trace, int n) {
         return 0;
     }
     trace[n] = root->id;
-    
+
     recDeleteChildProcess(conductor, root->left, trace, n + 1);
     recDeleteChildProcess(conductor, root->right, trace, n + 1);
     
     message msg;
     msg.cmd = DELETE_CHILD;
-    memcpy(msg.trace, trace, 100);
+    memset(msg.trace, 0, 100);
+    memcpy(msg.trace, trace, (n + 1) * sizeof(int));
     
     int toID = popFirstID(&(msg.trace));
 
@@ -54,7 +55,10 @@ void DeleteConductor(Conductor* conductor) {
         deleteTree(p->root);
         free(p);
     }
+    conductor->end = NULL;
     conductor->size = 0;
+
+    return;
 }
 
 int checkExist(Conductor* conductor, int id) {
@@ -133,25 +137,23 @@ int DeleteParent(Conductor* conductor, int id) {
         return ErrorNotFoundParent;
     }
 
-    if (pIter != NULL) {
-        DeleteChildProcesses(conductor, pIter->root);
-        deleteTree(pIter->root);
+    DeleteChildProcesses(conductor, pIter->root);
+    deleteTree(pIter->root);
 
-        Parent *prev = pIter->prev, *next = pIter->next;
-        if (prev != NULL) { 
-            pIter->prev->next = next;
-        } else {
-            conductor->begin = next;
-            conductor->begin->prev = NULL;
-        }
-        if (next != NULL) {
-            pIter->next->prev = prev;
-        } else {
-            conductor->end = prev;
-            conductor->end->next = NULL;
-        }
-        free(pIter);
+    Parent *prev = pIter->prev, *next = pIter->next;
+    if (prev != NULL) { 
+        pIter->prev->next = next;
+    } else {
+        conductor->begin = next;
+        conductor->begin->prev = NULL;
     }
+    if (next != NULL) {
+        pIter->next->prev = prev;
+    } else {
+        conductor->end = prev;
+        conductor->end->next = NULL;
+    }
+    free(pIter);
     return 0;
 }
 
@@ -424,12 +426,13 @@ int main(int argc, char const *argv[]) {
             sendMessage(conductor->responder, &msg);
             break;
         case EXIT: 
-            msg.error = 0;
-            sendMessage(conductor->responder, &msg);
+            DeleteConductor(conductor);
             bExit = 1;
             break;
         }
     }
-    DeleteConductor(conductor);
-    printf("[%d]: by by\n", getpid());
+    printf("orchestra[%d]: by by\n", getpid());
+    msg.error = 0;
+    sendMessage(conductor->responder, &msg);
+    closeZmqSocket(conductor->responder);
 }
